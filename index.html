@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
@@ -75,6 +76,14 @@ body{background:var(--bg);color:var(--tx);font-size:13px;min-height:100vh}
   border:1px solid rgba(59,130,246,.3);color:var(--bl-l);
   display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:500}
 .un{font-size:11px;color:var(--tx2)}
+/* حالة الاتصال */
+#connBar{background:var(--s2);border-bottom:1px solid var(--br);
+  padding:4px 20px;display:flex;align-items:center;gap:7px;font-size:11px;color:var(--tx3)}
+#connDot{width:7px;height:7px;border-radius:50%;background:#94a3b8;flex-shrink:0;transition:background .3s}
+#connDot.ok{background:#22c55e;box-shadow:0 0 5px #22c55e}
+#connDot.err{background:#ef4444;box-shadow:0 0 5px #ef4444}
+#connDot.wait{background:#f59e0b;animation:blink2 1s infinite}
+@keyframes blink2{0%,100%{opacity:1}50%{opacity:.3}}
 /* TABS */
 .tabs{background:var(--s1);border-bottom:1px solid var(--br);
   padding:0 20px;display:flex;gap:4px;overflow-x:auto}
@@ -170,23 +179,22 @@ tbody tr:hover td{background:var(--s2);color:var(--tx)}
 .dr:last-child{border-bottom:none}
 .dk{color:var(--tx3)}
 .dv{color:var(--tx);font-weight:500;text-align:left;max-width:290px;word-break:break-word}
-/* ── ATTACHMENT VIEWER ── */
+/* ATTACHMENT */
 .att-section{background:var(--s2);border:1px solid var(--br);border-radius:var(--r);padding:12px;margin-top:4px}
 .att-section-title{font-size:11px;color:var(--tx3);margin-bottom:10px;display:flex;align-items:center;gap:5px}
 .att-pdf-frame{width:100%;height:380px;border:none;border-radius:var(--r);background:#525659;display:block}
 .att-img-preview{width:100%;max-height:320px;object-fit:contain;border-radius:var(--r);
   border:1px solid var(--br);cursor:zoom-in;display:block}
 .att-actions{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
-/* FULL VIEWERS */
-.viewer-overlay{position:fixed;inset:0;background:rgba(0,0,0,.9);z-index:800;
-  display:flex;flex-direction:column}
+/* VIEWERS */
+.viewer-overlay{position:fixed;inset:0;background:rgba(0,0,0,.9);z-index:800;display:flex;flex-direction:column}
 .viewer-hd{display:flex;align-items:center;gap:10px;padding:10px 16px;
   background:var(--s1);border-bottom:1px solid var(--br);flex-shrink:0}
 .viewer-title{flex:1;font-size:13px;font-weight:500;color:var(--tx);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .viewer-body{flex:1;overflow:hidden;background:#525659}
 .viewer-body iframe{width:100%;height:100%;border:none;display:block}
 .viewer-body img{width:100%;height:100%;object-fit:contain;display:block}
-/* ATTACH UPLOAD */
+/* UPLOAD */
 .abox{background:var(--s2);border:1px solid var(--br);border-radius:var(--r);padding:12px}
 .abox-l{font-size:11px;color:var(--tx2);font-weight:500;margin-bottom:9px;display:flex;align-items:center;gap:5px}
 .agr{display:grid;grid-template-columns:1fr 1fr;gap:7px}
@@ -201,6 +209,14 @@ tbody tr:hover td{background:var(--s2);color:var(--tx)}
 .acs{font-size:10px;color:var(--tx3)}
 .apv{display:flex;align-items:center;gap:9px;background:var(--bg);
   border:1px solid var(--br);border-radius:var(--r);padding:8px 10px;margin-top:7px}
+/* REPORTS */
+.rg{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.pbr{display:flex;flex-direction:column;gap:4px;padding:8px 0;border-bottom:1px solid var(--br)}
+.pbr:last-child{border-bottom:none}
+.pbh{display:flex;justify-content:space-between;font-size:11px}
+.pbl{color:var(--tx2)}.pbv{color:var(--tx);font-weight:500}
+.pbt{height:5px;background:var(--s2);border-radius:10px;overflow:hidden}
+.pbf{height:100%;border-radius:10px;transition:width .8s ease}
 /* BTNS */
 .btn{display:inline-flex;align-items:center;gap:5px;padding:7px 13px;border-radius:var(--r);
   font-size:12px;font-weight:500;cursor:pointer;border:none;font-family:'Tajawal',sans-serif;transition:opacity .12s}
@@ -211,14 +227,6 @@ tbody tr:hover td{background:var(--s2);color:var(--tx)}
 .btn-rd{background:var(--rd-bg);color:var(--rd);border:1px solid rgba(239,68,68,.25)}
 .btn-gh{background:transparent;color:var(--tx2);border:1px solid var(--br2)}
 .btn-sm{padding:5px 10px;font-size:11px}
-/* REPORTS */
-.rg{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.pbr{display:flex;flex-direction:column;gap:4px;padding:8px 0;border-bottom:1px solid var(--br)}
-.pbr:last-child{border-bottom:none}
-.pbh{display:flex;justify-content:space-between;font-size:11px}
-.pbl{color:var(--tx2)}.pbv{color:var(--tx);font-weight:500}
-.pbt{height:5px;background:var(--s2);border-radius:10px;overflow:hidden}
-.pbf{height:100%;border-radius:10px;transition:width .8s ease}
 /* TOAST */
 .tw{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);
   display:flex;flex-direction:column;gap:6px;z-index:900;pointer-events:none}
@@ -268,6 +276,11 @@ tbody tr:hover td{background:var(--s2);color:var(--tx)}
       </div>
     </div>
   </div>
+  <!-- شريط حالة الاتصال -->
+  <div id="connBar">
+    <div id="connDot" class="wait"></div>
+    <span id="connTxt">جاري الاتصال بـ Firebase...</span>
+  </div>
   <div class="tabs">
     <div class="nt on" id="nt-dash" onclick="go('dash')"><i class="ti ti-layout-dashboard"></i> لوحة التحكم</div>
     <div class="nt" id="nt-inbox" onclick="go('inbox')"><i class="ti ti-inbox"></i> الوارد <span class="nb" id="inb" style="display:none">0</span></div>
@@ -282,25 +295,45 @@ tbody tr:hover td{background:var(--s2);color:var(--tx)}
 <div class="tw" id="tw"></div>
 
 <script>
-const MGR='1821992',DB='ncdc_v8';
-let db=null,storage=null,role=null,view='dash',Q='',mails=[],unsub=null,lR='emp';
-let pR=null,pN=null,iD=null,iN=null;
+// ════════════════════════════════════════════════════
+//  ✅ تم توحيد Firebase Config مع تطبيق المدير
+// ════════════════════════════════════════════════════
+const FIREBASE_CONFIG = {
+  apiKey:            "AIzaSyB-zqUZQ5u9AUKislLLl-KAGLoN9nairEo",
+  authDomain:        "ncdc-mail-a68ff.firebaseapp.com",
+  projectId:         "ncdc-mail-a68ff",
+  storageBucket:     "ncdc-mail-a68ff.firebasestorage.app",
+  messagingSenderId: "197299236308",
+  appId:             "1:197299236308:web:4205dd506cbc0148a53a41"
+};
+const COLLECTION = 'mails';
+const MGR_PASS   = '1821992';
 
-// ── FIREBASE ──
-try{
-  firebase.initializeApp({
-    apiKey: "AIzaSyCFbEW9iJKMZVtKTb9FsBjp4FduXtFUCJY",
-    authDomain: "ncdc-mali.firebaseapp.com",
-    databaseURL: "https://ncdc-mali-default-rtdb.firebaseio.com",
-    projectId: "ncdc-mali",
-    storageBucket: "ncdc-mali.firebasestorage.app",
-    messagingSenderId: "465272815753",
-    appId: "1:465272815753:web:4dbd1161ddf27dd9d60658",
-    measurementId: "G-KKDW2HLY3Y"
-  });
-  db=firebase.firestore();
-  storage=firebase.storage();
-}catch(e){console.warn('Firebase:',e);}
+let db=null, storage=null, role=null, view='dash', Q='', mails=[], unsub=null, lR='emp';
+let pR=null, pN=null, iD=null, iN=null;
+let retryTimer=null, retryCount=0;
+
+// ── FIREBASE INIT ──
+function initFirebase(){
+  try{
+    if(!firebase.apps.length) firebase.initializeApp(FIREBASE_CONFIG);
+    db      = firebase.firestore();
+    storage = firebase.storage();
+    return true;
+  }catch(e){
+    console.error('Firebase init error:',e);
+    setConn('err','فشل تهيئة Firebase: '+e.message);
+    return false;
+  }
+}
+
+// ── CONN STATUS ──
+function setConn(state, text){
+  const dot = document.getElementById('connDot');
+  const txt = document.getElementById('connTxt');
+  if(dot) dot.className = state;
+  if(txt) txt.textContent = text;
+}
 
 // ── AUTH ──
 function pickR(r){
@@ -310,29 +343,84 @@ function pickR(r){
   document.getElementById('pf').style.display=r==='mgr'?'block':'none';
   document.getElementById('le').style.display='none';
 }
+
 function doLogin(){
-  if(lR==='mgr'&&document.getElementById('lp').value!==MGR){
+  if(lR==='mgr'&&document.getElementById('lp').value!==MGR_PASS){
     document.getElementById('le').style.display='flex';
     document.getElementById('lp').value='';return;
   }
   role=lR;
   document.getElementById('login').style.display='none';
   document.getElementById('app').style.display='block';
-  applyRole();initData();
-  if(role==='mgr')requestNotifPerm();
+  applyRole();
+  initFirebase();
+  startListen();
+  if(role==='mgr') requestNotifPerm();
 }
+
 function doLogout(){
-  role=null;if(unsub)unsub();
+  role=null;
+  stopListen();
   document.getElementById('app').style.display='none';
   document.getElementById('login').style.display='flex';
-  document.getElementById('lp').value='';pickR('emp');
+  document.getElementById('lp').value='';
+  pickR('emp');
 }
+
 function applyRole(){
   const m=role==='mgr';
   document.querySelectorAll('.mgr-only').forEach(e=>e.style.display=m?'':'none');
   document.querySelectorAll('.emp-only').forEach(e=>e.style.display=m?'none':'');
   document.getElementById('un').textContent=m?'المدير':'موظف';
   document.getElementById('ua').textContent=m?'م':'و';
+}
+
+// ── LISTEN ──
+function stopListen(){
+  if(unsub){unsub();unsub=null;}
+  if(retryTimer){clearTimeout(retryTimer);retryTimer=null;}
+}
+
+function startListen(){
+  stopListen();
+  if(!db){if(!initFirebase())return;}
+  setConn('wait','جاري الاتصال بـ Firebase...');
+
+  try{
+    unsub = db.collection(COLLECTION).orderBy('createdAt','desc').onSnapshot(
+      snap=>{
+        retryCount=0;
+        const prev=mails.map(m=>m.id);
+        mails=snap.docs.map(d=>({id:d.id,...d.data()}));
+
+        // إشعار عند وصول بريد جديد للمدير
+        const newIds=mails.map(m=>m.id).filter(id=>!prev.includes(id));
+        if(newIds.length&&prev.length&&role==='mgr'){
+          const nm=mails.find(m=>m.id===newIds[0]);
+          if(nm&&nm.type==='in') sendNotif('بريد وارد جديد — NCDC',nm.subject+' | '+(nm.party||''));
+        }
+
+        render();
+        setConn('ok','متصل — يتم التحديث فورياً ✓');
+      },
+      err=>{
+        console.error('Firestore error:',err);
+        unsub=null;
+        let msg='تعذر الاتصال بـ Firebase';
+        if(err.code==='permission-denied') msg='خطأ في صلاحيات Firebase';
+        else if(err.code==='unavailable')  msg='Firebase غير متاح — تحقق من الإنترنت';
+        setConn('err', msg);
+        // إعادة المحاولة تلقائياً
+        retryCount++;
+        const delay=Math.min(5000*retryCount,30000);
+        setConn('wait',`إعادة الاتصال خلال ${Math.round(delay/1000)} ث...`);
+        retryTimer=setTimeout(()=>{ if(role) startListen(); }, delay);
+      }
+    );
+  }catch(e){
+    console.error(e);
+    setConn('err','خطأ: '+e.message);
+  }
 }
 
 // ── NOTIFICATIONS ──
@@ -343,64 +431,43 @@ async function requestNotifPerm(){
 function sendNotif(title,body){
   if(Notification.permission==='granted'){
     try{
-      const n=new Notification(title,{body,icon:'/icons/icon-192.png',dir:'rtl',lang:'ar',tag:'ncdc-mail'});
+      const n=new Notification(title,{body,dir:'rtl',lang:'ar',tag:'ncdc-mail'});
       setTimeout(()=>n.close(),6000);
       n.onclick=()=>{window.focus();n.close();};
     }catch(e){}
   }
 }
 
-// ── DATA ──
-function loadLocal(){
-  try{const r=localStorage.getItem(DB);const p=r?JSON.parse(r):[];mails=p.length>0?p:seed();}
-  catch{mails=seed();}
-}
-function saveLocal(){try{localStorage.setItem(DB,JSON.stringify(mails));}catch{}}
-function initData(){
-  if(!db){loadLocal();render();return;}
-  unsub=db.collection('mails').orderBy('createdAt','desc').onSnapshot(async snap=>{
-    if(snap.empty){
-      const def=seed();
-      const batch=db.batch();
-      def.forEach(m=>{const{id,...d}=m;d.createdAt=firebase.firestore.FieldValue.serverTimestamp();batch.set(db.collection('mails').doc(id),d);});
-      try{await batch.commit();}catch(e){}
-      mails=def;saveLocal();render();return;
-    }
-    const prev=mails.map(m=>m.id);
-    const loc=JSON.parse(localStorage.getItem(DB)||'[]');
-    mails=snap.docs.map(d=>{
-      const fd={id:d.id,...d.data()};
-      const l=loc.find(x=>x.id===d.id);
-      // المرفقات تُقرأ من Firebase أولاً، ومع ذلك نبقي نسخة محلية احتياطية للرسائل القديمة
-      return l?{...fd,att:fd.att||l.att||null,attName:fd.attName||l.attName||null,img:fd.img||l.img||null,imgName:fd.imgName||l.imgName||null}:fd;
-    });
-    // إشعار عند وصول بريد جديد
-    const newIds=mails.map(m=>m.id).filter(id=>!prev.includes(id));
-    if(newIds.length&&prev.length&&role==='mgr'){
-      const nm=mails.find(m=>m.id===newIds[0]);
-      if(nm&&nm.type==='in')sendNotif('بريد وارد جديد — NCDC',nm.subject+' | '+nm.party);
-    }
-    render();
-  },e=>{loadLocal();render();toast('يعمل محلياً',true);});
-}
-async function saveMail(m,isNew=false){
+// ── SAVE / DELETE ──
+async function saveMail(m, isNew=false){
   const idx=mails.findIndex(x=>x.id===m.id);
-  if(idx>=0)mails[idx]=m;else mails.unshift(m);
-  saveLocal();
+  if(idx>=0) mails[idx]=m; else mails.unshift(m);
+
   if(db){
     try{
       const fd={...m};
-      // نحفظ روابط/بيانات المرفقات حتى تظهر للمدير من أي جهاز، وليس محلياً فقط
-      if(m.id&&!m.id.startsWith('L')){await db.collection('mails').doc(m.id).set(fd,{merge:true});}
-      else{fd.createdAt=firebase.firestore.FieldValue.serverTimestamp();delete fd.id;const ref=await db.collection('mails').add(fd);mails[mails.findIndex(x=>x.id===m.id)].id=ref.id;saveLocal();}
-    }catch(e){toast('خطأ Firebase',true);}
+      if(m.id&&!m.id.startsWith('L')){
+        await db.collection(COLLECTION).doc(m.id).set(fd,{merge:true});
+      } else {
+        fd.createdAt=firebase.firestore.FieldValue.serverTimestamp();
+        delete fd.id;
+        const ref=await db.collection(COLLECTION).add(fd);
+        const i=mails.findIndex(x=>x.id===m.id);
+        if(i>=0) mails[i].id=ref.id;
+      }
+    }catch(e){
+      console.error('saveMail error:',e);
+      toast('خطأ Firebase: '+e.message, true);
+      throw e;
+    }
   }
   render();
-  if(isNew&&m.type==='in')sendNotif('بريد وارد جديد',m.subject);
+  if(isNew&&m.type==='in') sendNotif('بريد وارد جديد',m.subject);
 }
+
 async function delMail(id){
-  mails=mails.filter(x=>x.id!==id);saveLocal();
-  if(db)try{await db.collection('mails').doc(id).delete();}catch{}
+  mails=mails.filter(x=>x.id!==id);
+  if(db) try{await db.collection(COLLECTION).doc(id).delete();}catch(e){console.error(e);}
   render();
 }
 
@@ -415,22 +482,23 @@ function go(v){
 // ── RENDER ──
 function render(){
   updateBadge();
-  if(view==='dash')rDash();
-  else if(view==='rep')rRep();
-  else rList();
+  if(view==='dash')      rDash();
+  else if(view==='rep')  rRep();
+  else                   rList();
 }
+
 function updateBadge(){
   const n=mails.filter(m=>m.type==='in'&&!m.archived&&m.status==='new').length;
   const b=document.getElementById('inb');
-  b.textContent=n;b.style.display=n>0?'inline':'none';
+  if(b){b.textContent=n;b.style.display=n>0?'inline':'none';}
 }
 
 // ── DASHBOARD ──
 function rDash(){
   const ac=mails.filter(m=>!m.archived);
-  const inA=ac.filter(m=>m.type==='in').length,outA=ac.filter(m=>m.type==='out').length;
-  const nw=ac.filter(m=>m.status==='new').length,pe=ac.filter(m=>m.status==='pending').length;
-  const dn=ac.filter(m=>m.status==='done').length,ar=mails.filter(m=>m.archived).length;
+  const inA=ac.filter(m=>m.type==='in').length, outA=ac.filter(m=>m.type==='out').length;
+  const nw=ac.filter(m=>m.status==='new').length, pe=ac.filter(m=>m.status==='pending').length;
+  const dn=ac.filter(m=>m.status==='done').length, ar=mails.filter(m=>m.archived).length;
   const tot=mails.length||1;
   const dd=[{l:'جديد',v:nw,c:'#EF4444'},{l:'قيد المعالجة',v:pe,c:'#F59E0B'},{l:'منجز',v:dn,c:'#22C55E'},{l:'مؤرشف',v:ar,c:'#475569'}];
   const months=['يناير','فبراير','مارس','أبريل','مايو','يونيو'];
@@ -453,7 +521,7 @@ function rDash(){
         <div class="bl">${months.map((m,i)=>`<div class="bi"><div class="bh"><span class="bl2">${m}</span><span class="bv">${bvs[i]}</span></div><div class="bt"><div class="bf" style="width:${Math.round(bvs[i]/bmax*100)}%;background:var(--bl)"></div></div></div>`).join('')}</div>
       </div>
       <div class="cc"><div class="cc-t"><i class="ti ti-activity"></i> آخر النشاطات</div>
-        <div class="al">${mails.slice(0,5).map(m=>`<div class="ar"><div class="ad" style="background:${m.type==='in'?'#3B82F6':'#22C55E'}"></div><div class="at">${m.type==='in'?'وارد':'صادر'}: ${m.subject.substring(0,36)}${m.subject.length>36?'…':''}</div><div class="at2">${m.date}</div></div>`).join('')||'<div style="color:var(--tx3);font-size:11px;padding:8px">لا يوجد نشاط</div>'}</div>
+        <div class="al">${mails.slice(0,5).map(m=>`<div class="ar"><div class="ad" style="background:${m.type==='in'?'#3B82F6':'#22C55E'}"></div><div class="at">${m.type==='in'?'وارد':'صادر'}: ${(m.subject||'').substring(0,36)}${(m.subject||'').length>36?'…':''}</div><div class="at2">${m.date||''}</div></div>`).join('')||'<div style="color:var(--tx3);font-size:11px;padding:8px">لا يوجد نشاط</div>'}</div>
       </div>
     </div>
     <div class="tc">
@@ -465,16 +533,18 @@ function rDash(){
         <thead><tr><th>النوع</th><th>الرقم الإشاري</th><th>التاريخ</th><th>الموضوع</th><th>الجهة</th><th>الحالة</th></tr></thead>
         <tbody>${mails.slice(0,8).map(m=>`<tr onclick="openDetail('${m.id}')">
           <td><span class="${m.type==='in'?'ti':'to'}">${m.type==='in'?'وارد':'صادر'}</span></td>
-          <td style="font-family:monospace;font-size:11px">${m.ref}</td>
-          <td style="color:var(--tx3)">${m.date}</td><td>${m.subject}</td>
+          <td style="font-family:monospace;font-size:11px">${m.ref||''}</td>
+          <td style="color:var(--tx3)">${m.date||''}</td><td>${m.subject||''}</td>
           <td>${m.party||'—'}</td><td>${badge(m.status)}</td>
-        </tr>`).join('')}</tbody>
+        </tr>`).join('')||'<tr><td colspan="6" class="es">لا توجد بيانات</td></tr>'}</tbody>
       </table></div>
     </div>`;
 }
+
 function S(icon,lbl,val,bg,cl){
   return`<div class="sc"><div class="sc-i" style="background:${bg};color:${cl}"><i class="ti ${icon}"></i></div><div class="sc-n">${val}</div><div class="sc-l">${lbl}</div></div>`;
 }
+
 function mkDonut(data,total){
   const r=42,cx=60,cy=60,sw=11,circ=2*Math.PI*r;let off=0;
   const segs=data.map(d=>{const p=total>0?d.v/total:0,da=circ*p,ga=circ-da;
@@ -486,9 +556,9 @@ function mkDonut(data,total){
 // ── LIST ──
 function rList(){
   let list=mails.filter(m=>{
-    if(view==='inbox')return m.type==='in'&&!m.archived;
-    if(view==='outbox')return m.type==='out'&&!m.archived;
-    if(view==='archive')return m.archived;
+    if(view==='inbox')   return m.type==='in'&&!m.archived;
+    if(view==='outbox')  return m.type==='out'&&!m.archived;
+    if(view==='archive') return m.archived;
     return true;
   }).filter(m=>!Q||(m.subject+m.ref+m.party+m.notes).includes(Q));
   const cp=view==='inbox'?'الجهة المُرسِلة':view==='outbox'?'الجهة المُرسَل إليها':'الجهة';
@@ -517,9 +587,9 @@ function rList(){
         <thead><tr>${view==='archive'?'<th>النوع</th>':''}<th>الرقم الإشاري</th><th>التاريخ</th><th>الموضوع</th><th>${cp}</th><th>مرفق</th><th>الحالة</th><th></th></tr></thead>
         <tbody>${list.map(m=>`<tr onclick="openDetail('${m.id}')" data-st="${m.status}">
           ${view==='archive'?`<td><span class="${m.type==='in'?'ti':'to'}">${m.type==='in'?'وارد':'صادر'}</span></td>`:''}
-          <td style="font-family:monospace;font-size:11px">${m.ref}</td>
-          <td style="color:var(--tx3)">${m.date}</td>
-          <td>${m.subject}</td><td>${m.party||'—'}</td>
+          <td style="font-family:monospace;font-size:11px">${m.ref||''}</td>
+          <td style="color:var(--tx3)">${m.date||''}</td>
+          <td>${m.subject||''}</td><td>${m.party||'—'}</td>
           <td>${m.att?`<span class="ac" style="cursor:pointer" onclick="event.stopPropagation();quickView('${m.id}')"><i class="ti ti-eye"></i>عرض</span>`:'—'}</td>
           <td>${badge(m.status)}</td>
           <td><i class="ti ti-chevron-left" style="color:var(--tx3);font-size:13px"></i></td>
@@ -527,20 +597,19 @@ function rList(){
       </table></div>`}
     </div>`;
 }
+
 function filt(btn,s){
   document.querySelectorAll('.fp').forEach(b=>b.classList.remove('on'));
   btn.classList.add('on');
   document.querySelectorAll('[data-st]').forEach(r=>{r.style.display=(s==='all'||r.dataset.st===s)?'':'none';});
 }
 
-// ── QUICK VIEW (من الجدول مباشرة) ──
 function quickView(id){
   const m=mails.find(x=>x.id===id);if(!m||!m.att)return;
   const isPDF=m.attName&&m.attName.toLowerCase().endsWith('.pdf');
   openViewer(m.att,m.attName,isPDF);
 }
 
-// ── FULL VIEWER ──
 function openViewer(src,name,isPDF){
   document.body.insertAdjacentHTML('beforeend',`
     <div class="viewer-overlay" id="vov">
@@ -551,17 +620,13 @@ function openViewer(src,name,isPDF){
         <button class="btn btn-rd btn-sm" onclick="document.getElementById('vov').remove()"><i class="ti ti-x"></i> إغلاق</button>
       </div>
       <div class="viewer-body">
-        ${isPDF
-          ?`<iframe src="${src}" title="${name}"></iframe>`
-          :`<img src="${src}" alt="${name}" style="width:100%;height:100%;object-fit:contain">`
-        }
+        ${isPDF?`<iframe src="${src}" title="${name}"></iframe>`
+               :`<img src="${src}" alt="${name}" style="width:100%;height:100%;object-fit:contain">`}
       </div>
     </div>`);
 }
 
-function dlSrc(src,name){
-  const a=document.createElement('a');a.href=src;a.download=name;a.click();
-}
+function dlSrc(src,name){const a=document.createElement('a');a.href=src;a.download=name;a.click();}
 
 // ── REPORTS ──
 function rRep(){
@@ -605,28 +670,25 @@ function openDetail(id){
   const isPDF=m.attName&&m.attName.toLowerCase().endsWith('.pdf');
   showModal(`
     <div class="mh">
-      <div class="mt"><span class="${m.type==='in'?'ti':'to'}">${m.type==='in'?'وارد':'صادر'}</span>${m.ref}</div>
+      <div class="mt"><span class="${m.type==='in'?'ti':'to'}">${m.type==='in'?'وارد':'صادر'}</span>${m.ref||''}</div>
       <button class="mc" onclick="closeModal()"><i class="ti ti-x"></i></button>
     </div>
     <div class="md">
-      <div class="dr"><span class="dk">الرقم الإشاري</span><span class="dv" style="font-family:monospace">${m.ref}</span></div>
-      <div class="dr"><span class="dk">التاريخ</span><span class="dv">${m.date}</span></div>
+      <div class="dr"><span class="dk">الرقم الإشاري</span><span class="dv" style="font-family:monospace">${m.ref||'—'}</span></div>
+      <div class="dr"><span class="dk">التاريخ</span><span class="dv">${m.date||'—'}</span></div>
       <div class="dr"><span class="dk">${m.type==='in'?'من':'إلى'}</span><span class="dv">${m.party||'—'}</span></div>
-      <div class="dr"><span class="dk">الموضوع</span><span class="dv">${m.subject}</span></div>
+      <div class="dr"><span class="dk">الموضوع</span><span class="dv">${m.subject||'—'}</span></div>
       <div class="dr"><span class="dk">الأولوية</span><span class="dv">${m.priority==='high'?'<span class="b bn">عاجل</span>':'<span class="b ba">عادي</span>'}</span></div>
       <div class="dr"><span class="dk">الحالة</span><span class="dv">${badge(m.status)}</span></div>
       ${m.notes?`<div class="dr"><span class="dk">ملاحظات</span><span class="dv">${m.notes}</span></div>`:''}
-
       ${m.att?`
       <div class="att-section">
         <div class="att-section-title">
           <i class="ti ti-${isPDF?'file-type-pdf':'photo'}" style="font-size:14px;color:${isPDF?'#EF4444':'#3B82F6'}"></i>
           صورة المراسلة — ${m.attName||'مرفق'}
         </div>
-        ${isPDF
-          ?`<iframe src="${m.att}" class="att-pdf-frame" title="${m.attName}"></iframe>`
-          :`<img src="${m.att}" class="att-img-preview" onclick="openViewer('${m.att}','${m.attName||'صورة'}',false)" alt="صورة المراسلة">`
-        }
+        ${isPDF?`<iframe src="${m.att}" class="att-pdf-frame" title="${m.attName}"></iframe>`
+               :`<img src="${m.att}" class="att-img-preview" onclick="openViewer('${m.att}','${m.attName||'صورة'}',false)" alt="صورة المراسلة">`}
         <div class="att-actions">
           <button class="btn btn-bl btn-sm" onclick="openViewer('${m.att}','${m.attName||'ملف'}',${isPDF})">
             <i class="ti ti-${isPDF?'arrows-maximize':'zoom-in'}"></i> ${isPDF?'توسيع':'تكبير'}
@@ -636,7 +698,6 @@ function openDetail(id){
           </button>
         </div>
       </div>`:''}
-
       ${m.img?`
       <div class="att-section" style="margin-top:8px">
         <div class="att-section-title">
@@ -653,13 +714,12 @@ function openDetail(id){
           </button>
         </div>
       </div>`:''}
-
       ${isMgr?`<div class="fg" style="margin-top:6px">
         <label class="fl">تغيير الحالة</label>
         <select class="fi" id="ss" style="max-width:200px">
-          <option value="new" ${m.status==='new'?'selected':''}>جديد</option>
+          <option value="new"     ${m.status==='new'    ?'selected':''}>جديد</option>
           <option value="pending" ${m.status==='pending'?'selected':''}>قيد المعالجة</option>
-          <option value="done" ${m.status==='done'?'selected':''}>منجز</option>
+          <option value="done"    ${m.status==='done'   ?'selected':''}>منجز</option>
         </select></div>`:''}
     </div>
     <div class="mf">
@@ -677,17 +737,13 @@ async function arch(id){const m=mails.find(x=>x.id===id);if(!m)return;m.archived
 async function unarch(id){const m=mails.find(x=>x.id===id);if(!m)return;m.archived=false;m.status='done';closeModal();await saveMail(m);toast('✓ إلغاء الأرشفة');}
 function confDel(id){if(confirm('حذف هذا البريد نهائياً؟')){closeModal();delMail(id);toast('تم الحذف');}}
 
-
-// ── UPLOAD ATTACHMENTS ──
+// ── UPLOAD ──
 function safeFileName(name){
   const n=(name||'file').replace(/[^\u0600-\u06FFa-zA-Z0-9._-]/g,'_');
   return Date.now()+'_'+Math.random().toString(36).slice(2,8)+'_'+n;
 }
 function timeoutPromise(p,ms,label){
-  return Promise.race([
-    p,
-    new Promise((_,rej)=>setTimeout(()=>rej(new Error(label||'timeout')),ms))
-  ]);
+  return Promise.race([p,new Promise((_,rej)=>setTimeout(()=>rej(new Error(label||'timeout')),ms))]);
 }
 function readAsDataURL(file){
   return new Promise((resolve,reject)=>{
@@ -703,36 +759,27 @@ async function compressImageFile(file){
   return new Promise(resolve=>{
     const img=new Image();
     img.onload=()=>{
-      const max=1400;
-      let w=img.width,h=img.height;
-      if(w>max||h>max){
-        const ratio=Math.min(max/w,max/h);w=Math.round(w*ratio);h=Math.round(h*ratio);
-      }
+      const max=1400;let w=img.width,h=img.height;
+      if(w>max||h>max){const ratio=Math.min(max/w,max/h);w=Math.round(w*ratio);h=Math.round(h*ratio);}
       const canvas=document.createElement('canvas');canvas.width=w;canvas.height=h;
       const ctx=canvas.getContext('2d');ctx.drawImage(img,0,0,w,h);
       resolve(canvas.toDataURL('image/jpeg',0.72));
     };
-    img.onerror=()=>resolve(dataUrl);
-    img.src=dataUrl;
+    img.onerror=()=>resolve(dataUrl);img.src=dataUrl;
   });
 }
 async function uploadDataUrl(dataUrl,name,folder){
   if(!dataUrl)return null;
-  // نحاول Firebase Storage، لكن لا نترك العملية معلّقة؛ بعد 8 ثواني نرجع للحفظ داخل Firestore.
   if(storage){
     try{
       const ref=storage.ref().child(`${folder}/${safeFileName(name)}`);
       await timeoutPromise(ref.putString(dataUrl,'data_url'),8000,'storage-timeout');
       return await timeoutPromise(ref.getDownloadURL(),5000,'url-timeout');
-    }catch(e){console.warn('Storage upload failed/timeout, fallback to Firestore/base64',e);}
+    }catch(e){console.warn('Storage fallback to base64:',e);}
   }
-  // احتياط مضمون للصور المضغوطة والملفات الصغيرة: حفظ Base64 داخل Firestore.
-  if(dataUrl.length>850000){
-    throw new Error('attachment-too-large');
-  }
+  if(dataUrl.length>850000) throw new Error('attachment-too-large');
   return dataUrl;
 }
-
 
 // ── ADD ──
 function openAdd(){
@@ -782,7 +829,13 @@ function openAdd(){
       <button class="btn btn-gh btn-sm" onclick="closeModal()">إلغاء</button>
     </div>`);
 }
-function tP(){const t=document.getElementById('ft').value;document.getElementById('pi').style.display=t==='in'?'':'none';document.getElementById('po').style.display=t==='out'?'':'none';}
+
+function tP(){
+  const t=document.getElementById('ft').value;
+  document.getElementById('pi').style.display=t==='in'?'':'none';
+  document.getElementById('po').style.display=t==='out'?'':'none';
+}
+
 async function hA(inp){
   const f=inp.files[0];if(!f)return;
   document.getElementById('al').textContent='جاري التجهيز...';
@@ -807,6 +860,7 @@ function updPv(){
   if(iD)h+=`<div class="apv" style="margin-top:7px"><img src="${iD}" style="width:40px;height:40px;object-fit:cover;border-radius:6px;flex-shrink:0"><div style="flex:1;font-size:12px;font-weight:500;color:var(--tx)">${iN}</div><button onclick="iD=null;iN=null;document.getElementById('il').textContent='اضغط للرفع';updPv()" style="background:var(--rd-bg);border:none;border-radius:6px;width:22px;height:22px;color:var(--rd);cursor:pointer;font-size:12px;display:flex;align-items:center;justify-content:center"><i class="ti ti-x"></i></button></div>`;
   p.innerHTML=h;
 }
+
 async function saveNew(){
   const type=document.getElementById('ft').value;
   const sub=document.getElementById('fs').value.trim();
@@ -816,36 +870,41 @@ async function saveNew(){
   const party=type==='in'?document.getElementById('ffr').value.trim():document.getElementById('fto').value.trim();
   let attUrl=null,imgUrl=null;
   try{
-    if(pR||iD)toast('جاري إرفاق الملف...');
+    if(pR||iD) toast('جاري إرفاق الملف...');
     attUrl=pR?await uploadDataUrl(pR,pN||'attachment','mail-attachments'):null;
     imgUrl=iD?await uploadDataUrl(iD,iN||'image','mail-images'):null;
   }catch(e){
     if(btn){btn.disabled=false;btn.style.opacity='1';btn.innerHTML='<i class="ti ti-check"></i> حفظ البريد';}
-    toast('المرفق كبير أو تعذر رفعه. جرّب صورة أصغر أو PDF أقل من 600KB، أو فعّل Firebase Storage.',true);
+    toast('المرفق كبير أو تعذر رفعه. جرّب صورة أصغر أو PDF أقل من 600KB.',true);
     return;
   }
-  const mail={id:'L'+Date.now(),type,ref:document.getElementById('fr2').value.trim()||'غير محدد',
-    date:document.getElementById('fd').value,party,subject:sub,
-    status:document.getElementById('fst').value,priority:document.getElementById('fp2').value,
-    notes:document.getElementById('fn').value.trim(),archived:false,
+  const mail={
+    id:'L'+Date.now(),type,
+    ref:document.getElementById('fr2').value.trim()||'غير محدد',
+    date:document.getElementById('fd').value,
+    party,subject:sub,
+    status:document.getElementById('fst').value,
+    priority:document.getElementById('fp2').value,
+    notes:document.getElementById('fn').value.trim(),
+    archived:false,
     att:attUrl,attName:pN||null,img:imgUrl,imgName:iN||null,
-    createdAt:new Date().toISOString()};
+    createdAt:new Date().toISOString()
+  };
   try{
     await saveMail(mail,true);
     closeModal();
-    toast('✓ تم حفظ البريد'+(type==='in'?' — إشعار للمدير':''));
+    toast('✓ تم حفظ البريد'+(type==='in'?' — تم إرسال إشعار للمدير':''));
   }catch(e){
     if(btn){btn.disabled=false;btn.style.opacity='1';btn.innerHTML='<i class="ti ti-check"></i> حفظ البريد';}
     toast('تعذر حفظ البريد. تحقق من الاتصال أو صلاحيات Firebase.',true);
   }
 }
 
-
 // ── EXPORT ──
 function pdfExp(id){
   const m=mails.find(x=>x.id===id);if(!m)return;
   const w=window.open('','_blank');
-  w.document.write(`<!DOCTYPE html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><title>بريد ${m.ref}</title><style>body{font-family:Tajawal,sans-serif;padding:24px;color:#1a1a18}.hd{border-bottom:2px solid #185FA5;padding-bottom:10px;margin-bottom:14px}h2{color:#185FA5;font-size:15px}.row{display:flex;justify-content:space-between;padding:6px 0;border-bottom:0.5px solid #eee;font-size:12px}.k{color:#666}.v{font-weight:500}.ft{margin-top:18px;font-size:10px;color:#aaa;border-top:1px solid #eee;padding-top:7px;display:flex;justify-content:space-between}</style></head><body><div class="hd"><h2>المركز الوطني لمكافحة الأمراض — إدارة التطعيمات</h2><div style="font-size:11px;color:#666">${new Date().toLocaleDateString('ar-LY')}</div></div><div class="row"><span class="k">الرقم الإشاري</span><span class="v" style="font-family:monospace">${m.ref}</span></div><div class="row"><span class="k">التاريخ</span><span class="v">${m.date}</span></div><div class="row"><span class="k">النوع</span><span class="v">${m.type==='in'?'بريد وارد':'بريد صادر'}</span></div><div class="row"><span class="k">${m.type==='in'?'من':'إلى'}</span><span class="v">${m.party||'—'}</span></div><div class="row"><span class="k">الموضوع</span><span class="v">${m.subject}</span></div><div class="row"><span class="k">الحالة</span><span class="v">${m.status}</span></div>${m.notes?`<div class="row"><span class="k">ملاحظات</span><span class="v">${m.notes}</span></div>`:''}<div class="ft"><span>wonderful-frangollo-f76092.netlify.app</span><span>إدارة التطعيمات</span></div></body></html>`);
+  w.document.write(`<!DOCTYPE html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><title>بريد ${m.ref}</title><style>body{font-family:Tajawal,sans-serif;padding:24px;color:#1a1a18}.hd{border-bottom:2px solid #185FA5;padding-bottom:10px;margin-bottom:14px}h2{color:#185FA5;font-size:15px}.row{display:flex;justify-content:space-between;padding:6px 0;border-bottom:0.5px solid #eee;font-size:12px}.k{color:#666}.v{font-weight:500}.ft{margin-top:18px;font-size:10px;color:#aaa;border-top:1px solid #eee;padding-top:7px;display:flex;justify-content:space-between}</style></head><body><div class="hd"><h2>المركز الوطني لمكافحة الأمراض — إدارة التطعيمات</h2><div style="font-size:11px;color:#666">${new Date().toLocaleDateString('ar-LY')}</div></div><div class="row"><span class="k">الرقم الإشاري</span><span class="v" style="font-family:monospace">${m.ref}</span></div><div class="row"><span class="k">التاريخ</span><span class="v">${m.date}</span></div><div class="row"><span class="k">النوع</span><span class="v">${m.type==='in'?'بريد وارد':'بريد صادر'}</span></div><div class="row"><span class="k">${m.type==='in'?'من':'إلى'}</span><span class="v">${m.party||'—'}</span></div><div class="row"><span class="k">الموضوع</span><span class="v">${m.subject}</span></div><div class="row"><span class="k">الحالة</span><span class="v">${m.status}</span></div>${m.notes?`<div class="row"><span class="k">ملاحظات</span><span class="v">${m.notes}</span></div>`:''}<div class="ft"><span>NCDC — Libya</span><span>إدارة التطعيمات</span></div></body></html>`);
   w.document.close();w.print();
 }
 function expCSV(){
@@ -861,7 +920,7 @@ function printA(){
   w.document.close();w.print();
 }
 
-// ── MODAL ──
+// ── MODAL / TOAST ──
 function showModal(html,cls=''){
   document.getElementById('modals').innerHTML=`<div class="mo" onclick="if(event.target.className==='mo')closeModal()"><div class="mb ${cls}">${html}</div></div>`;
 }
@@ -873,24 +932,10 @@ function toast(msg,err=false){
   d.innerHTML=`<i class="ti ti-${err?'alert-circle':'check'}"></i>${msg}`;
   w.appendChild(d);setTimeout(()=>d.remove(),3000);
 }
-
-// ── HELPERS ──
 function badge(s){
   const m={new:['bn','جديد'],pending:['bp','قيد المعالجة'],done:['bd','منجز'],archived:['ba','مؤرشف']};
   const[c,l]=m[s]||['ba',s];return`<span class="b ${c}">${l}</span>`;
 }
-function seed(){return[
-  {id:'s01',type:'in',ref:'8859/4.4',date:'2026/05/11',party:'مدير مكتب الاستشاريين',subject:'خطة تفصيلية للرصد والاستجابة السريعة',status:'new',priority:'high',notes:'يطلب تجهيز خطة تفصيلية تحتوي على عدد النشاطات والأشخاص',archived:false,att:null,attName:null,img:null,imgName:null,createdAt:'2026-05-11'},
-  {id:'s02',type:'in',ref:'6540/4.4',date:'2026/05/11',party:'مدير الشؤون الإدارية',subject:'إلزام الموظفين بإبراز البطاقة عند الدخول',status:'done',priority:'normal',notes:'يُطبَّق اعتباراً من 2026/05/17',archived:false,att:null,attName:null,img:null,imgName:null,createdAt:'2026-05-10'},
-  {id:'s03',type:'in',ref:'7712/3.1',date:'2026/04/28',party:'إدارة تقنية المعلومات',subject:'توزيع أجهزة إلكترونية على فرق الرصد',status:'new',priority:'high',notes:'قائمة المستهدفين مطلوبة خلال أسبوع',archived:false,att:null,attName:null,img:null,imgName:null,createdAt:'2026-04-28'},
-  {id:'s04',type:'out',ref:'8116/16.6',date:'2026/04/28',party:'مدير إدارة الرصد والاستجابة',subject:'طلب خطة عمل تفصيلية للتطعيمات',status:'done',priority:'normal',notes:'تم الإرسال وانتظار الرد',archived:false,att:null,attName:null,img:null,imgName:null,createdAt:'2026-04-27'},
-  {id:'s05',type:'out',ref:'7205/11.2',date:'2026/04/15',party:'مدير الشؤون المالية',subject:'احتياجات الميزانية لبرنامج التطعيم 2026',status:'pending',priority:'normal',notes:'في انتظار الموافقة',archived:false,att:null,attName:null,img:null,imgName:null,createdAt:'2026-04-15'},
-  {id:'s06',type:'in',ref:'9901/6.3',date:'2026/05/02',party:'منظمة الصحة العالمية',subject:'تقرير متابعة برنامج التطعيم الوطني',status:'new',priority:'high',notes:'تقرير شامل يحتاج مراجعة عاجلة',archived:false,att:null,attName:null,img:null,imgName:null,createdAt:'2026-05-02'},
-  {id:'s07',type:'in',ref:'4421/1.5',date:'2026/05/08',party:'مدير إدارة التطعيمات الوقائية',subject:'طلب إحصائيات تغطية التطعيم الشهرية',status:'pending',priority:'normal',notes:'البيانات مطلوبة قبل نهاية الشهر',archived:false,att:null,attName:null,img:null,imgName:null,createdAt:'2026-05-08'},
-  {id:'s08',type:'out',ref:'3310/7.2',date:'2026/05/05',party:'مدير الخدمات الصحية بالمنطقة الغربية',subject:'جدول جلسات التطعيم الميداني — مايو 2026',status:'done',priority:'high',notes:'تم التنسيق مع الفرق الميدانية',archived:false,att:null,attName:null,img:null,imgName:null,createdAt:'2026-05-05'},
-  {id:'s09',type:'in',ref:'6540/2.8',date:'2026/03/20',party:'وزارة الصحة',subject:'تعميم بروتوكول التطعيم الجديد',status:'done',priority:'high',notes:'تم التنفيذ',archived:true,att:null,attName:null,img:null,imgName:null,createdAt:'2026-03-20'},
-  {id:'s10',type:'out',ref:'2205/9.1',date:'2026/04/25',party:'إدارة المستودعات الطبية',subject:'طلب تأمين جرعات اللقاحات للربع الثاني',status:'done',priority:'normal',notes:'تم التسليم',archived:false,att:null,attName:null,img:null,imgName:null,createdAt:'2026-04-25'},
-];}
 </script>
 </body>
 </html>
