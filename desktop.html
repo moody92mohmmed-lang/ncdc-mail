@@ -1,896 +1,443 @@
+
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>بريد إدارة التطعيمات — NCDC</title>
-<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
-<link href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css" rel="stylesheet">
-<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-storage-compat.js"></script>
-<style>
-*{box-sizing:border-box;margin:0;padding:0;direction:rtl;font-family:'Tajawal',sans-serif}
-:root{
-  --bg:#0F172A;--s1:#1E293B;--s2:#283447;--s3:#334155;
-  --br:rgba(148,163,184,.1);--br2:rgba(148,163,184,.2);
-  --tx:#F1F5F9;--tx2:#94A3B8;--tx3:#475569;
-  --bl:#3B82F6;--bl-l:#60A5FA;--bl-bg:rgba(59,130,246,.1);
-  --gr:#22C55E;--gr-bg:rgba(34,197,94,.1);
-  --am:#F59E0B;--am-bg:rgba(245,158,11,.1);
-  --rd:#EF4444;--rd-bg:rgba(239,68,68,.1);
-  --pu:#A855F7;--pu-bg:rgba(168,85,247,.1);
-  --r:8px;--rl:14px
-}
-body{background:var(--bg);color:var(--tx);font-size:13px;min-height:100vh}
-/* LOGIN */
-#login{min-height:100vh;display:flex;align-items:center;justify-content:center;
-  background:radial-gradient(ellipse at 25% 40%,rgba(59,130,246,.15),transparent 55%)}
-.lc{background:var(--s1);border:1px solid var(--br2);border-radius:20px;
-  padding:36px 28px;width:340px;display:flex;flex-direction:column;align-items:center;gap:14px;text-align:center}
-.ll{width:56px;height:56px;border-radius:16px;background:var(--bl-bg);border:1px solid rgba(59,130,246,.3);
-  display:flex;align-items:center;justify-content:center;font-size:26px;color:var(--bl-l)}
-.lo{font-size:14px;font-weight:500;color:var(--tx)}
-.ld{font-size:11px;color:var(--tx3)}
-.le{background:var(--rd-bg);border:1px solid rgba(239,68,68,.25);border-radius:var(--r);
-  padding:8px 12px;font-size:12px;color:var(--rd);width:100%;display:none;align-items:center;gap:6px}
-.rt{display:grid;grid-template-columns:1fr 1fr;gap:8px;width:100%}
-.rb{background:var(--s2);border:1px solid var(--br);border-radius:var(--r);
-  padding:12px 8px;cursor:pointer;display:flex;flex-direction:column;align-items:center;
-  gap:5px;font-size:12px;color:var(--tx2);transition:all .15s}
-.rb i{font-size:20px}
-.rb.on{background:var(--bl-bg);border-color:rgba(59,130,246,.35);color:var(--bl-l)}
-.li{width:100%;background:var(--s2);border:1px solid var(--br2);border-radius:var(--r);
-  padding:10px 12px;color:var(--tx);font-size:13px;font-family:'Tajawal',sans-serif;
-  outline:none;transition:border-color .15s}
-.li:focus{border-color:var(--bl)}
-.lb{width:100%;background:var(--bl);color:#fff;border:none;border-radius:var(--r);
-  padding:11px;font-size:14px;font-weight:500;cursor:pointer;font-family:'Tajawal',sans-serif;
-  display:flex;align-items:center;justify-content:center;gap:7px}
-.lb:hover{opacity:.88}
-/* APP */
-#app{display:none;min-height:100vh}
-.topbar{background:var(--s1);border-bottom:1px solid var(--br);
-  padding:10px 20px;display:flex;align-items:center;gap:10px;
-  position:sticky;top:0;z-index:100}
-.tb-brand{display:flex;align-items:center;gap:10px;flex:1}
-.tb-ico{width:32px;height:32px;border-radius:9px;background:var(--bl-bg);
-  border:1px solid rgba(59,130,246,.3);color:var(--bl-l);
-  display:flex;align-items:center;justify-content:center;font-size:16px}
-.tb-nm{font-size:13px;font-weight:500;color:var(--tx)}
-.tb-sb{font-size:10px;color:var(--tx3)}
-.tb-act{display:flex;align-items:center;gap:7px}
-.tb-srch{display:flex;align-items:center;gap:6px;background:var(--s2);
-  border:1px solid var(--br);border-radius:var(--r);padding:5px 10px}
-.tb-srch i{color:var(--tx3);font-size:14px}
-.tb-srch input{background:none;border:none;outline:none;color:var(--tx);
-  font-size:12px;width:140px;font-family:'Tajawal',sans-serif}
-.ib{background:var(--s2);border:1px solid var(--br);border-radius:var(--r);
-  width:32px;height:32px;display:flex;align-items:center;justify-content:center;
-  cursor:pointer;color:var(--tx2);font-size:15px;transition:all .12s}
-.ib:hover{background:var(--s3);color:var(--tx)}
-.uc{display:flex;align-items:center;gap:6px;background:var(--s2);
-  border:1px solid var(--br);border-radius:20px;padding:4px 10px 4px 6px;cursor:pointer}
-.ua{width:22px;height:22px;border-radius:50%;background:var(--bl-bg);
-  border:1px solid rgba(59,130,246,.3);color:var(--bl-l);
-  display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:500}
-.un{font-size:11px;color:var(--tx2)}
-/* TABS */
-.tabs{background:var(--s1);border-bottom:1px solid var(--br);
-  padding:0 20px;display:flex;gap:4px;overflow-x:auto}
-.nt{padding:10px 13px;font-size:12px;color:var(--tx2);cursor:pointer;
-  border-bottom:2px solid transparent;display:flex;align-items:center;gap:5px;
-  white-space:nowrap;transition:all .12s}
-.nt:hover{color:var(--tx)}
-.nt.on{color:var(--bl-l);border-bottom-color:var(--bl-l);font-weight:500}
-.nb{background:var(--rd-bg);color:var(--rd);font-size:10px;padding:1px 5px;border-radius:20px;font-weight:500}
-/* CONTENT */
-.ct{padding:20px;max-width:1200px;margin:0 auto}
-/* STATS */
-.sg{display:grid;grid-template-columns:repeat(auto-fit,minmax(148px,1fr));gap:10px;margin-bottom:18px}
-.sc{background:var(--s1);border:1px solid var(--br);border-radius:var(--rl);
-  padding:16px;display:flex;flex-direction:column;gap:8px;position:relative;overflow:hidden;transition:border-color .15s}
-.sc:hover{border-color:var(--br2)}
-.sc-i{width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:19px}
-.sc-n{font-size:28px;font-weight:700;color:var(--tx);line-height:1}
-.sc-l{font-size:11px;color:var(--tx2)}
-/* CHARTS */
-.cg{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:18px}
-.cc{background:var(--s1);border:1px solid var(--br);border-radius:var(--rl);padding:16px}
-.cc-t{font-size:12px;font-weight:500;color:var(--tx2);margin-bottom:12px;display:flex;align-items:center;gap:6px}
-.dw{display:flex;flex-direction:column;align-items:center;gap:10px}
-.dl{width:100%;display:flex;flex-direction:column;gap:5px}
-.dlr{display:flex;align-items:center;gap:7px;font-size:11px}
-.dld{width:8px;height:8px;border-radius:50%;flex-shrink:0}
-.dll{flex:1;color:var(--tx2)}
-.dln{font-weight:500;color:var(--tx)}
-.bl{display:flex;flex-direction:column;gap:9px}
-.bi{display:flex;flex-direction:column;gap:3px}
-.bh{display:flex;justify-content:space-between;font-size:11px}
-.bl2{color:var(--tx2)}
-.bv{color:var(--tx);font-weight:500}
-.bt{height:5px;background:var(--s2);border-radius:10px;overflow:hidden}
-.bf{height:100%;border-radius:10px;transition:width .7s ease}
-.al{display:flex;flex-direction:column}
-.ar{display:flex;align-items:flex-start;gap:8px;padding:7px 0;border-bottom:1px solid var(--br)}
-.ar:last-child{border-bottom:none}
-.ad{width:6px;height:6px;border-radius:50%;margin-top:4px;flex-shrink:0}
-.at{font-size:11px;color:var(--tx2);flex:1;line-height:1.5}
-.at2{font-size:10px;color:var(--tx3);white-space:nowrap}
-/* TABLE */
-.tc{background:var(--s1);border:1px solid var(--br);border-radius:var(--rl);overflow:hidden;margin-bottom:14px}
-.th{padding:11px 16px;border-bottom:1px solid var(--br);display:flex;align-items:center;gap:10px;flex-wrap:wrap}
-.tt{font-size:13px;font-weight:500;color:var(--tx);flex:1;display:flex;align-items:center;gap:7px}
-.fc{display:flex;gap:4px}
-.fp{padding:3px 9px;border-radius:20px;font-size:11px;border:1px solid var(--br);
-  background:transparent;cursor:pointer;color:var(--tx2);font-family:'Tajawal',sans-serif;transition:all .12s}
-.fp.on{background:var(--bl-bg);color:var(--bl-l);border-color:rgba(59,130,246,.3)}
-table{width:100%;border-collapse:collapse;font-size:12px;table-layout:fixed}
-th{padding:8px 13px;text-align:right;font-weight:500;font-size:11px;color:var(--tx3);
-  background:var(--s2);border-bottom:1px solid var(--br);
-  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-td{padding:9px 13px;border-bottom:1px solid var(--br);color:var(--tx2);
-  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;vertical-align:middle}
-tr:last-child td{border-bottom:none}
-tbody tr{cursor:pointer;transition:background .1s}
-tbody tr:hover td{background:var(--s2);color:var(--tx)}
-.es{text-align:center;padding:40px;color:var(--tx3)}
-.es i{font-size:32px;display:block;margin-bottom:8px;opacity:.3}
-/* BADGES */
-.b{display:inline-flex;align-items:center;padding:2px 7px;border-radius:20px;font-size:10px;font-weight:500;white-space:nowrap}
-.bn{background:var(--rd-bg);color:var(--rd)}
-.bp{background:var(--am-bg);color:var(--am)}
-.bd{background:var(--gr-bg);color:var(--gr)}
-.ba{background:var(--s2);color:var(--tx3)}
-.ti{background:var(--bl-bg);color:var(--bl-l);padding:2px 7px;border-radius:20px;font-size:10px;font-weight:500}
-.to{background:var(--gr-bg);color:var(--gr);padding:2px 7px;border-radius:20px;font-size:10px;font-weight:500}
-.ac{background:var(--s2);border:1px solid var(--br);border-radius:4px;
-  padding:2px 6px;font-size:10px;color:var(--tx3);display:inline-flex;align-items:center;gap:3px}
-/* MODAL */
-.mo{position:fixed;inset:0;background:rgba(0,0,0,.65);display:flex;align-items:center;
-  justify-content:center;z-index:500;padding:16px}
-.mb{background:var(--s1);border:1px solid var(--br2);border-radius:var(--rl);
-  width:100%;max-width:560px;max-height:92vh;overflow-y:auto;display:flex;flex-direction:column}
-.mb.wide{max-width:780px}
-.mh{padding:14px 18px;border-bottom:1px solid var(--br);display:flex;align-items:center;gap:10px;flex-shrink:0}
-.mt{font-size:14px;font-weight:500;color:var(--tx);flex:1;display:flex;align-items:center;gap:8px}
-.mc{background:none;border:none;color:var(--tx3);cursor:pointer;font-size:18px}
-.md{padding:18px;display:flex;flex-direction:column;gap:12px;flex:1}
-.mf{padding:12px 18px;border-top:1px solid var(--br);display:flex;gap:7px;flex-wrap:wrap}
-.fg{display:flex;flex-direction:column;gap:4px}
-.fl{font-size:11px;color:var(--tx2)}
-.fi{width:100%;background:var(--s2);border:1px solid var(--br2);border-radius:var(--r);
-  padding:8px 10px;color:var(--tx);font-size:12px;font-family:'Tajawal',sans-serif;
-  outline:none;transition:border-color .12s}
-.fi:focus{border-color:var(--bl)}
-.fr{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-/* DETAIL */
-.dr{display:flex;justify-content:space-between;align-items:flex-start;
-  padding:8px 0;border-bottom:1px solid var(--br);font-size:12px}
-.dr:last-child{border-bottom:none}
-.dk{color:var(--tx3)}
-.dv{color:var(--tx);font-weight:500;text-align:left;max-width:290px;word-break:break-word}
-/* ── ATTACHMENT VIEWER ── */
-.att-section{background:var(--s2);border:1px solid var(--br);border-radius:var(--r);padding:12px;margin-top:4px}
-.att-section-title{font-size:11px;color:var(--tx3);margin-bottom:10px;display:flex;align-items:center;gap:5px}
-.att-pdf-frame{width:100%;height:380px;border:none;border-radius:var(--r);background:#525659;display:block}
-.att-img-preview{width:100%;max-height:320px;object-fit:contain;border-radius:var(--r);
-  border:1px solid var(--br);cursor:zoom-in;display:block}
-.att-actions{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
-/* FULL VIEWERS */
-.viewer-overlay{position:fixed;inset:0;background:rgba(0,0,0,.9);z-index:800;
-  display:flex;flex-direction:column}
-.viewer-hd{display:flex;align-items:center;gap:10px;padding:10px 16px;
-  background:var(--s1);border-bottom:1px solid var(--br);flex-shrink:0}
-.viewer-title{flex:1;font-size:13px;font-weight:500;color:var(--tx);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.viewer-body{flex:1;overflow:hidden;background:#525659}
-.viewer-body iframe{width:100%;height:100%;border:none;display:block}
-.viewer-body img{width:100%;height:100%;object-fit:contain;display:block}
-/* ATTACH UPLOAD */
-.abox{background:var(--s2);border:1px solid var(--br);border-radius:var(--r);padding:12px}
-.abox-l{font-size:11px;color:var(--tx2);font-weight:500;margin-bottom:9px;display:flex;align-items:center;gap:5px}
-.agr{display:grid;grid-template-columns:1fr 1fr;gap:7px}
-.acard{background:var(--bg);border:1px dashed var(--br2);border-radius:var(--r);
-  padding:10px 8px;cursor:pointer;text-align:center;display:flex;flex-direction:column;
-  align-items:center;gap:5px;transition:all .12s}
-.acard:hover{border-color:var(--bl);background:var(--bl-bg)}
-.aci{width:34px;height:34px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:17px}
-.air{background:var(--rd-bg);color:var(--rd)}
-.aib{background:var(--bl-bg);color:var(--bl-l)}
-.acn{font-size:11px;font-weight:500;color:var(--tx)}
-.acs{font-size:10px;color:var(--tx3)}
-.apv{display:flex;align-items:center;gap:9px;background:var(--bg);
-  border:1px solid var(--br);border-radius:var(--r);padding:8px 10px;margin-top:7px}
-/* BTNS */
-.btn{display:inline-flex;align-items:center;gap:5px;padding:7px 13px;border-radius:var(--r);
-  font-size:12px;font-weight:500;cursor:pointer;border:none;font-family:'Tajawal',sans-serif;transition:opacity .12s}
-.btn:hover{opacity:.87}
-.btn-bl{background:var(--bl);color:#fff}
-.btn-gr{background:var(--gr-bg);color:var(--gr);border:1px solid rgba(34,197,94,.25)}
-.btn-am{background:var(--am-bg);color:var(--am);border:1px solid rgba(245,158,11,.25)}
-.btn-rd{background:var(--rd-bg);color:var(--rd);border:1px solid rgba(239,68,68,.25)}
-.btn-gh{background:transparent;color:var(--tx2);border:1px solid var(--br2)}
-.btn-sm{padding:5px 10px;font-size:11px}
-/* REPORTS */
-.rg{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.pbr{display:flex;flex-direction:column;gap:4px;padding:8px 0;border-bottom:1px solid var(--br)}
-.pbr:last-child{border-bottom:none}
-.pbh{display:flex;justify-content:space-between;font-size:11px}
-.pbl{color:var(--tx2)}.pbv{color:var(--tx);font-weight:500}
-.pbt{height:5px;background:var(--s2);border-radius:10px;overflow:hidden}
-.pbf{height:100%;border-radius:10px;transition:width .8s ease}
-/* TOAST */
-.tw{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);
-  display:flex;flex-direction:column;gap:6px;z-index:900;pointer-events:none}
-.tt2{display:flex;align-items:center;gap:7px;padding:9px 16px;border-radius:var(--r);
-  font-size:12px;font-weight:500;pointer-events:auto;animation:ti2 .25s ease;white-space:nowrap}
-.tok{background:var(--gr-bg);color:var(--gr);border:1px solid rgba(34,197,94,.3)}
-.terr{background:var(--rd-bg);color:var(--rd);border:1px solid rgba(239,68,68,.3)}
-@keyframes ti2{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
-@media(max-width:900px){.cg{grid-template-columns:1fr}.rg{grid-template-columns:1fr}.fr{grid-template-columns:1fr}
-  .tb-srch input{width:90px}table th:nth-child(n+5),table td:nth-child(n+5){display:none}}
-@media(max-width:600px){.sg{grid-template-columns:1fr 1fr}.ct{padding:12px}
-  .agr{grid-template-columns:1fr}.tabs{overflow-x:auto;white-space:nowrap}}
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NCDC — تطبيق المدير للهاتف v10</title>
+  <meta name="theme-color" content="#0f172a" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <link rel="manifest" href="manifest.json" />
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0;font-family:Tajawal,Arial,sans-serif}
+    :root{--bg:#0f172a;--card:#1e293b;--card2:#273449;--line:rgba(148,163,184,.2);--txt:#f8fafc;--mut:#94a3b8;--blue:#3b82f6;--green:#22c55e;--amber:#f59e0b;--red:#ef4444}
+    body{background:var(--bg);color:var(--txt);min-height:100vh;padding-bottom:78px}.hide{display:none!important}.wrap{max-width:720px;margin:0 auto;padding:14px}.center{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:18px}
+    .login{width:100%;max-width:390px;background:var(--card);border:1px solid var(--line);border-radius:26px;padding:26px 20px;box-shadow:0 16px 50px rgba(0,0,0,.25)}.logo{width:62px;height:62px;border-radius:20px;background:rgba(59,130,246,.14);display:flex;align-items:center;justify-content:center;font-size:30px;margin:0 auto 12px}.title{text-align:center;font-size:21px;font-weight:800}.sub{text-align:center;color:var(--mut);font-size:13px;margin-top:5px;line-height:1.6}.inp{width:100%;margin-top:18px;background:var(--card2);border:1px solid var(--line);border-radius:14px;color:var(--txt);padding:14px;font-size:17px;outline:none;text-align:center}.btn{width:100%;margin-top:12px;border:0;border-radius:14px;background:var(--blue);color:white;padding:13px;font-size:16px;font-weight:800;cursor:pointer}.err{background:rgba(239,68,68,.13);border:1px solid rgba(239,68,68,.28);color:#fca5a5;border-radius:13px;padding:10px;margin-top:12px;text-align:center;font-size:13px}
+    .top{position:sticky;top:0;background:rgba(15,23,42,.96);backdrop-filter:blur(12px);border-bottom:1px solid var(--line);z-index:10}.topin{max-width:720px;margin:0 auto;padding:13px 14px;display:flex;align-items:center;gap:10px}.appicon{width:42px;height:42px;border-radius:15px;background:rgba(59,130,246,.15);display:flex;align-items:center;justify-content:center;font-size:21px}.head{flex:1}.head h1{font-size:17px}.head p{font-size:11px;color:var(--mut);margin-top:2px}.iconbtn{border:1px solid var(--line);background:var(--card);color:var(--txt);width:42px;height:42px;border-radius:14px;font-size:18px;cursor:pointer}
+    /* حالة الاتصال */
+    #connDot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-left:5px;background:#94a3b8;vertical-align:middle;transition:background .4s}
+    #connDot.ok{background:var(--green);box-shadow:0 0 6px var(--green)}
+    #connDot.err{background:var(--red);box-shadow:0 0 6px var(--red)}
+    #connDot.wait{background:var(--amber);animation:blink 1s infinite}
+    @keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+    /* بانر خطأ Firebase */
+    #firebaseErrBanner{background:rgba(239,68,68,.12);border:1px solid rgba(239,68,68,.35);border-radius:14px;padding:11px 14px;margin-bottom:12px;display:none;align-items:center;gap:10px}
+    #firebaseErrBanner.show{display:flex}
+    #firebaseErrBanner span{flex:1;font-size:13px;color:#fca5a5;line-height:1.6}
+    #retryBtn{border:1px solid rgba(239,68,68,.4);background:rgba(239,68,68,.18);color:#fca5a5;border-radius:10px;padding:7px 12px;font-size:13px;font-weight:800;cursor:pointer;white-space:nowrap}
+
+    .stats{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:12px}.stat{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:14px}.stat .n{font-size:28px;font-weight:800}.stat .l{color:var(--mut);font-size:12px;margin-top:2px}.search{display:flex;gap:8px;margin:14px 0 10px}.search input{flex:1;background:var(--card);border:1px solid var(--line);border-radius:16px;color:var(--txt);padding:12px 13px;outline:none}.search button{width:48px;border:1px solid var(--line);border-radius:16px;background:var(--card);color:var(--txt);font-size:18px}.tabs{display:flex;gap:8px;overflow:auto;margin:10px 0 14px;padding-bottom:4px}.tab{white-space:nowrap;border:1px solid var(--line);background:var(--card);color:var(--mut);padding:8px 13px;border-radius:999px;font-size:13px;cursor:pointer}.tab.on{background:rgba(59,130,246,.18);color:#93c5fd;border-color:rgba(59,130,246,.35)}
+    .card{background:var(--card);border:1px solid var(--line);border-radius:22px;margin-bottom:12px;overflow:hidden}.cardbody{padding:14px}.row{display:flex;gap:8px;align-items:center;justify-content:space-between}.subject{font-size:15px;font-weight:800;line-height:1.55;margin:8px 0;color:#fff}.meta{font-size:12px;color:var(--mut);line-height:1.8}.badge{display:inline-flex;align-items:center;padding:4px 9px;border-radius:999px;font-size:11px;font-weight:800}.new{background:rgba(239,68,68,.15);color:#fca5a5}.pending{background:rgba(245,158,11,.15);color:#fcd34d}.done{background:rgba(34,197,94,.15);color:#86efac}.arch{background:rgba(148,163,184,.15);color:#cbd5e1}.type{background:rgba(59,130,246,.15);color:#93c5fd}.actions{background:rgba(15,23,42,.35);border-top:1px solid var(--line);padding:10px}.smallbtn{width:100%;border:1px solid var(--line);border-radius:13px;background:var(--card2);color:var(--txt);padding:12px;font-weight:800;text-align:center;text-decoration:none;font-size:14px;cursor:pointer}.empty,.loading{text-align:center;color:var(--mut);padding:45px 10px;background:var(--card);border:1px solid var(--line);border-radius:22px}.select{width:100%;background:#0f172a;border:1px solid var(--line);border-radius:14px;color:white;padding:12px;font-size:16px;outline:none;margin-top:8px}.toast{position:fixed;left:50%;bottom:86px;transform:translateX(-50%);background:#052e16;color:#bbf7d0;border:1px solid rgba(34,197,94,.35);border-radius:14px;padding:11px 16px;font-weight:800;z-index:80;box-shadow:0 10px 40px rgba(0,0,0,.32);min-width:220px;text-align:center}.toast.bad{background:#450a0a;color:#fecaca;border-color:rgba(239,68,68,.35)}
+    .bottom{position:fixed;bottom:0;left:0;right:0;background:rgba(15,23,42,.96);border-top:1px solid var(--line);z-index:20}.nav{max-width:720px;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr);gap:4px;padding:8px}.nav button{background:transparent;border:0;color:var(--mut);padding:8px 4px;border-radius:14px;font-size:12px}.nav button.on{background:rgba(59,130,246,.14);color:#93c5fd}.nav b{display:block;font-size:19px;margin-bottom:2px}
+    .modal{position:fixed;inset:0;background:rgba(2,6,23,.82);z-index:60;display:none;align-items:flex-end;justify-content:center}.modal.show{display:flex}.sheet{width:100%;max-width:720px;max-height:88vh;overflow:auto;background:var(--card);border:1px solid var(--line);border-radius:24px 24px 0 0;padding:16px;box-shadow:0 -20px 60px rgba(0,0,0,.35)}.modalHead{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px}.modalHead h2{font-size:18px}.close{width:40px;height:40px;border-radius:13px;border:1px solid var(--line);background:var(--card2);color:#fff;font-size:20px}.drow{background:rgba(15,23,42,.35);border:1px solid var(--line);border-radius:14px;padding:11px;margin-bottom:8px}.drow b{display:block;color:#93c5fd;font-size:12px;margin-bottom:4px}.drow span{font-size:14px;line-height:1.7}.statusBox{background:rgba(59,130,246,.08);border:1px solid rgba(59,130,246,.25);border-radius:16px;padding:12px;margin:10px 0}.statusBox label{font-size:14px;font-weight:800}.modalactions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}.preview{margin-top:10px;background:#020617;border-radius:16px;overflow:hidden;border:1px solid var(--line)}.preview img{display:block;width:100%;height:auto}.disabled{opacity:.55;pointer-events:none}.debug{font-size:11px;color:#94a3b8;text-align:center;margin-top:8px}
+  </style>
 </head>
 <body>
-<div id="login">
-  <div class="lc">
-    <div class="ll"><i class="ti ti-shield-check"></i></div>
-    <div class="lo">المركز الوطني لمكافحة الأمراض</div>
-    <div class="ld">إدارة التطعيمات — منصة البريد الرسمي</div>
-    <div class="le" id="le"><i class="ti ti-alert-circle"></i> كلمة المرور غير صحيحة</div>
-    <div class="rt">
-      <div class="rb on" id="re" onclick="pickR('emp')"><i class="ti ti-user-circle"></i><span>موظف</span></div>
-      <div class="rb" id="rm" onclick="pickR('mgr')"><i class="ti ti-crown"></i><span>مدير</span></div>
+  <div id="loginScreen" class="center">
+    <div class="login">
+      <div class="logo">🛡️</div><div class="title">لوحة المدير للهاتف</div>
+      <div class="sub">متابعة المراسلات مع تعديل الحالة من داخل صفحة عرض المراسلة</div>
+      <input id="pass" class="inp" type="password" placeholder="كلمة مرور المدير" />
+      <button id="loginBtn" class="btn" type="button">دخول المدير</button>
+      <div id="loginErr" class="err hide">كلمة المرور غير صحيحة</div>
     </div>
-    <div id="pf" style="display:none">
-      <input type="password" id="lp" class="li" placeholder="كلمة مرور المدير" onkeydown="if(event.key==='Enter')doLogin()">
-    </div>
-    <button class="lb" onclick="doLogin()"><i class="ti ti-login"></i> دخول</button>
   </div>
-</div>
 
-<div id="app">
-  <div class="topbar">
-    <div class="tb-brand">
-      <div class="tb-ico"><i class="ti ti-shield-check"></i></div>
-      <div><div class="tb-nm">إدارة التطعيمات</div><div class="tb-sb">NCDC — Libya</div></div>
+  <div id="app" class="hide">
+    <div class="top">
+      <div class="topin">
+        <div class="appicon">📬</div>
+        <div class="head">
+          <h1>لوحة المدير v10</h1>
+          <p><span id="connDot" class="wait"></span><span id="conn">جاري الاتصال بـ Firebase...</span></p>
+        </div>
+        <button class="iconbtn" id="notifyBtn" title="تفعيل الإشعارات">🔔</button>
+        <button class="iconbtn" id="logoutBtn">↩</button>
+      </div>
     </div>
-    <div class="tb-act">
-      <div class="tb-srch"><i class="ti ti-search"></i><input type="text" placeholder="بحث..." oninput="Q=this.value;render()" id="si"></div>
-      <div class="ib emp-only" onclick="openAdd()" title="إضافة"><i class="ti ti-plus"></i></div>
-      <div class="ib mgr-only" onclick="expCSV()" title="تصدير"><i class="ti ti-download"></i></div>
-      <div class="ib mgr-only" onclick="printA()" title="طباعة"><i class="ti ti-printer"></i></div>
-      <div class="uc" onclick="doLogout()">
-        <div class="ua" id="ua">م</div><span class="un" id="un">موظف</span>
-        <i class="ti ti-logout" style="font-size:12px;color:var(--tx3)"></i>
+
+    <main class="wrap">
+      <!-- بانر خطأ Firebase -->
+      <div id="firebaseErrBanner">
+        <span id="firebaseErrMsg">تعذر الاتصال بـ Firebase</span>
+        <button id="retryBtn" type="button">إعادة المحاولة</button>
+      </div>
+
+      <div class="stats">
+        <div class="stat"><div class="n" id="stActive">0</div><div class="l">وارد نشط</div></div>
+        <div class="stat"><div class="n" id="stNew">0</div><div class="l">جديد</div></div>
+        <div class="stat"><div class="n" id="stPending">0</div><div class="l">قيد المعالجة</div></div>
+        <div class="stat"><div class="n" id="stDone">0</div><div class="l">منجز</div></div>
+      </div>
+      <div class="search">
+        <input id="q" placeholder="بحث بالموضوع أو الجهة أو الرقم...">
+        <button id="refreshBtn" type="button">↻</button>
+      </div>
+      <div class="tabs">
+        <button class="tab on" data-filter="all">الكل</button>
+        <button class="tab" data-filter="new">جديد</button>
+        <button class="tab" data-filter="pending">قيد المعالجة</button>
+        <button class="tab" data-filter="done">منجز</button>
+        <button class="tab" data-filter="archive">الأرشيف</button>
+      </div>
+      <div id="list" class="loading">جاري تحميل البيانات...</div>
+      <div class="debug">v10 — real-time</div>
+    </main>
+
+    <div class="bottom">
+      <div class="nav">
+        <button class="on" data-filter="all"><b>⌂</b>الرئيسية</button>
+        <button data-filter="new"><b>●</b>الجديد</button>
+        <button data-filter="pending"><b>⏳</b>قيد</button>
+        <button data-filter="archive"><b>🗄️</b>الأرشيف</button>
       </div>
     </div>
   </div>
-  <div class="tabs">
-    <div class="nt on" id="nt-dash" onclick="go('dash')"><i class="ti ti-layout-dashboard"></i> لوحة التحكم</div>
-    <div class="nt" id="nt-inbox" onclick="go('inbox')"><i class="ti ti-inbox"></i> الوارد <span class="nb" id="inb" style="display:none">0</span></div>
-    <div class="nt" id="nt-outbox" onclick="go('outbox')"><i class="ti ti-send"></i> الصادر</div>
-    <div class="nt" id="nt-archive" onclick="go('archive')"><i class="ti ti-archive"></i> الأرشيف</div>
-    <div class="nt mgr-only" id="nt-rep" onclick="go('rep')"><i class="ti ti-chart-bar"></i> التقارير</div>
-  </div>
-  <div class="ct" id="ct"></div>
-</div>
 
-<div id="modals"></div>
-<div class="tw" id="tw"></div>
+  <div id="detailsModal" class="modal">
+    <div class="sheet">
+      <div class="modalHead"><h2>عرض المراسلة / تعديل الحالة</h2><button id="closeModal" class="close" type="button">×</button></div>
+      <div id="modalContent"></div>
+    </div>
+  </div>
 
 <script>
-const MGR='1821992',DB='ncdc_v8';
-let db=null,storage=null,role=null,view='dash',Q='',mails=[],unsub=null,lR='emp';
-let pR=null,pN=null,iD=null,iN=null;
+/* ===== الإعدادات ===== */
+const MANAGER_PASSWORD = "1821992";
+const COLLECTION_NAME  = "mails";
+const RETRY_DELAY_MS   = 5000; // إعادة المحاولة كل 5 ثوانٍ عند الخطأ
 
-// ── FIREBASE ──
-try{
-  firebase.initializeApp({
-    apiKey: "AIzaSyCFbEW9iJKMZVtKTb9FsBjp4FduXtFUCJY",
-    authDomain: "ncdc-mali.firebaseapp.com",
-    databaseURL: "https://ncdc-mali-default-rtdb.firebaseio.com",
-    projectId: "ncdc-mali",
-    storageBucket: "ncdc-mali.firebasestorage.app",
-    messagingSenderId: "465272815753",
-    appId: "1:465272815753:web:4dbd1161ddf27dd9d60658",
-    measurementId: "G-KKDW2HLY3Y"
-  });
-  db=firebase.firestore();
-  storage=firebase.storage();
-}catch(e){console.warn('Firebase:',e);}
+const firebaseConfig = {
+  apiKey:            "AIzaSyB-zqUZQ5u9AUKislLLl-KAGLoN9nairEo",
+  authDomain:        "ncdc-mail-a68ff.firebaseapp.com",
+  projectId:         "ncdc-mail-a68ff",
+  storageBucket:     "ncdc-mail-a68ff.firebasestorage.app",
+  messagingSenderId: "197299236308",
+  appId:             "1:197299236308:web:4205dd506cbc0148a53a41"
+};
 
-// ── AUTH ──
-function pickR(r){
-  lR=r;
-  document.getElementById('re').classList.toggle('on',r==='emp');
-  document.getElementById('rm').classList.toggle('on',r==='mgr');
-  document.getElementById('pf').style.display=r==='mgr'?'block':'none';
-  document.getElementById('le').style.display='none';
-}
-function doLogin(){
-  if(lR==='mgr'&&document.getElementById('lp').value!==MGR){
-    document.getElementById('le').style.display='flex';
-    document.getElementById('lp').value='';return;
-  }
-  role=lR;
-  document.getElementById('login').style.display='none';
-  document.getElementById('app').style.display='block';
-  applyRole();initData();
-  if(role==='mgr')requestNotifPerm();
-}
-function doLogout(){
-  role=null;if(unsub)unsub();
-  document.getElementById('app').style.display='none';
-  document.getElementById('login').style.display='flex';
-  document.getElementById('lp').value='';pickR('emp');
-}
-function applyRole(){
-  const m=role==='mgr';
-  document.querySelectorAll('.mgr-only').forEach(e=>e.style.display=m?'':'none');
-  document.querySelectorAll('.emp-only').forEach(e=>e.style.display=m?'none':'');
-  document.getElementById('un').textContent=m?'المدير':'موظف';
-  document.getElementById('ua').textContent=m?'م':'و';
-}
+/* ===== الحالة ===== */
+let db = null, unsub = null, mails = [], filter = 'all', query = '';
+let firstLoad = true, knownIds = new Set();
+let retryTimer = null, retryCount = 0;
 
-// ── NOTIFICATIONS ──
-async function requestNotifPerm(){
-  if(!('Notification' in window))return;
-  await Notification.requestPermission();
-}
-function sendNotif(title,body){
-  if(Notification.permission==='granted'){
-    try{
-      const n=new Notification(title,{body,icon:'/icons/icon-192.png',dir:'rtl',lang:'ar',tag:'ncdc-mail'});
-      setTimeout(()=>n.close(),6000);
-      n.onclick=()=>{window.focus();n.close();};
-    }catch(e){}
-  }
-}
-
-// ── DATA ──
-function loadLocal(){
-  try{const r=localStorage.getItem(DB);const p=r?JSON.parse(r):[];mails=p.length>0?p:seed();}
-  catch{mails=seed();}
-}
-function saveLocal(){try{localStorage.setItem(DB,JSON.stringify(mails));}catch{}}
-function initData(){
-  if(!db){loadLocal();render();return;}
-  unsub=db.collection('mails').orderBy('createdAt','desc').onSnapshot(async snap=>{
-    if(snap.empty){
-      const def=seed();
-      const batch=db.batch();
-      def.forEach(m=>{const{id,...d}=m;d.createdAt=firebase.firestore.FieldValue.serverTimestamp();batch.set(db.collection('mails').doc(id),d);});
-      try{await batch.commit();}catch(e){}
-      mails=def;saveLocal();render();return;
-    }
-    const prev=mails.map(m=>m.id);
-    const loc=JSON.parse(localStorage.getItem(DB)||'[]');
-    mails=snap.docs.map(d=>{
-      const fd={id:d.id,...d.data()};
-      const l=loc.find(x=>x.id===d.id);
-      // المرفقات تُقرأ من Firebase أولاً، ومع ذلك نبقي نسخة محلية احتياطية للرسائل القديمة
-      return l?{...fd,att:fd.att||l.att||null,attName:fd.attName||l.attName||null,img:fd.img||l.img||null,imgName:fd.imgName||l.imgName||null}:fd;
-    });
-    // إشعار عند وصول بريد جديد
-    const newIds=mails.map(m=>m.id).filter(id=>!prev.includes(id));
-    if(newIds.length&&prev.length&&role==='mgr'){
-      const nm=mails.find(m=>m.id===newIds[0]);
-      if(nm&&nm.type==='in')sendNotif('بريد وارد جديد — NCDC',nm.subject+' | '+nm.party);
-    }
-    render();
-  },e=>{loadLocal();render();toast('يعمل محلياً',true);});
-}
-async function saveMail(m,isNew=false){
-  const idx=mails.findIndex(x=>x.id===m.id);
-  if(idx>=0)mails[idx]=m;else mails.unshift(m);
-  saveLocal();
-  if(db){
-    try{
-      const fd={...m};
-      // نحفظ روابط/بيانات المرفقات حتى تظهر للمدير من أي جهاز، وليس محلياً فقط
-      if(m.id&&!m.id.startsWith('L')){await db.collection('mails').doc(m.id).set(fd,{merge:true});}
-      else{fd.createdAt=firebase.firestore.FieldValue.serverTimestamp();delete fd.id;const ref=await db.collection('mails').add(fd);mails[mails.findIndex(x=>x.id===m.id)].id=ref.id;saveLocal();}
-    }catch(e){toast('خطأ Firebase',true);}
-  }
-  render();
-  if(isNew&&m.type==='in')sendNotif('بريد وارد جديد',m.subject);
-}
-async function delMail(id){
-  mails=mails.filter(x=>x.id!==id);saveLocal();
-  if(db)try{await db.collection('mails').doc(id).delete();}catch{}
-  render();
-}
-
-// ── NAV ──
-function go(v){
-  view=v;
-  document.querySelectorAll('.nt').forEach(e=>e.classList.remove('on'));
-  document.getElementById('nt-'+v)?.classList.add('on');
-  render();
-}
-
-// ── RENDER ──
-function render(){
-  updateBadge();
-  if(view==='dash')rDash();
-  else if(view==='rep')rRep();
-  else rList();
-}
-function updateBadge(){
-  const n=mails.filter(m=>m.type==='in'&&!m.archived&&m.status==='new').length;
-  const b=document.getElementById('inb');
-  b.textContent=n;b.style.display=n>0?'inline':'none';
-}
-
-// ── DASHBOARD ──
-function rDash(){
-  const ac=mails.filter(m=>!m.archived);
-  const inA=ac.filter(m=>m.type==='in').length,outA=ac.filter(m=>m.type==='out').length;
-  const nw=ac.filter(m=>m.status==='new').length,pe=ac.filter(m=>m.status==='pending').length;
-  const dn=ac.filter(m=>m.status==='done').length,ar=mails.filter(m=>m.archived).length;
-  const tot=mails.length||1;
-  const dd=[{l:'جديد',v:nw,c:'#EF4444'},{l:'قيد المعالجة',v:pe,c:'#F59E0B'},{l:'منجز',v:dn,c:'#22C55E'},{l:'مؤرشف',v:ar,c:'#475569'}];
-  const months=['يناير','فبراير','مارس','أبريل','مايو','يونيو'];
-  const bvs=months.map(()=>Math.max(1,Math.round(tot/6*(0.6+Math.random()*0.8))));
-  const bmax=Math.max(...bvs);
-  document.getElementById('ct').innerHTML=`
-    <div class="sg">
-      ${S('ti-inbox','وارد نشط',inA,'var(--bl-bg)','var(--bl-l)')}
-      ${S('ti-send','صادر نشط',outA,'var(--gr-bg)','var(--gr)')}
-      ${S('ti-bell-ringing','جديد',nw,'var(--rd-bg)','var(--rd)')}
-      ${S('ti-clock','قيد المعالجة',pe,'var(--am-bg)','var(--am)')}
-      ${S('ti-check','منجز',dn,'var(--gr-bg)','var(--gr)')}
-      ${S('ti-archive','مؤرشف',ar,'var(--pu-bg)','var(--pu)')}
-    </div>
-    <div class="cg">
-      <div class="cc"><div class="cc-t"><i class="ti ti-chart-donut"></i> توزيع الحالات</div>
-        <div class="dw">${mkDonut(dd,tot)}<div class="dl">${dd.map(d=>`<div class="dlr"><div class="dld" style="background:${d.c}"></div><div class="dll">${d.l}</div><div class="dln">${d.v}</div></div>`).join('')}</div></div>
-      </div>
-      <div class="cc"><div class="cc-t"><i class="ti ti-chart-bar"></i> نشاط الأشهر الستة</div>
-        <div class="bl">${months.map((m,i)=>`<div class="bi"><div class="bh"><span class="bl2">${m}</span><span class="bv">${bvs[i]}</span></div><div class="bt"><div class="bf" style="width:${Math.round(bvs[i]/bmax*100)}%;background:var(--bl)"></div></div></div>`).join('')}</div>
-      </div>
-      <div class="cc"><div class="cc-t"><i class="ti ti-activity"></i> آخر النشاطات</div>
-        <div class="al">${mails.slice(0,5).map(m=>`<div class="ar"><div class="ad" style="background:${m.type==='in'?'#3B82F6':'#22C55E'}"></div><div class="at">${m.type==='in'?'وارد':'صادر'}: ${m.subject.substring(0,36)}${m.subject.length>36?'…':''}</div><div class="at2">${m.date}</div></div>`).join('')||'<div style="color:var(--tx3);font-size:11px;padding:8px">لا يوجد نشاط</div>'}</div>
-      </div>
-    </div>
-    <div class="tc">
-      <div class="th"><div class="tt"><i class="ti ti-table"></i> آخر المراسلات</div>
-        <button class="btn btn-gh btn-sm" onclick="go('inbox')">عرض الكل <i class="ti ti-arrow-left"></i></button>
-      </div>
-      <div style="overflow-x:auto"><table>
-        <colgroup><col style="width:55px"><col style="width:105px"><col style="width:90px"><col><col style="width:110px"><col style="width:90px"></colgroup>
-        <thead><tr><th>النوع</th><th>الرقم الإشاري</th><th>التاريخ</th><th>الموضوع</th><th>الجهة</th><th>الحالة</th></tr></thead>
-        <tbody>${mails.slice(0,8).map(m=>`<tr onclick="openDetail('${m.id}')">
-          <td><span class="${m.type==='in'?'ti':'to'}">${m.type==='in'?'وارد':'صادر'}</span></td>
-          <td style="font-family:monospace;font-size:11px">${m.ref}</td>
-          <td style="color:var(--tx3)">${m.date}</td><td>${m.subject}</td>
-          <td>${m.party||'—'}</td><td>${badge(m.status)}</td>
-        </tr>`).join('')}</tbody>
-      </table></div>
-    </div>`;
-}
-function S(icon,lbl,val,bg,cl){
-  return`<div class="sc"><div class="sc-i" style="background:${bg};color:${cl}"><i class="ti ${icon}"></i></div><div class="sc-n">${val}</div><div class="sc-l">${lbl}</div></div>`;
-}
-function mkDonut(data,total){
-  const r=42,cx=60,cy=60,sw=11,circ=2*Math.PI*r;let off=0;
-  const segs=data.map(d=>{const p=total>0?d.v/total:0,da=circ*p,ga=circ-da;
-    const s=`<circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="${d.c}" stroke-width="${sw}" stroke-dasharray="${da.toFixed(2)} ${ga.toFixed(2)}" stroke-dashoffset="${(-off).toFixed(2)}" transform="rotate(-90 ${cx} ${cy})"/>`;
-    off+=da;return s;}).join('');
-  return`<svg width="120" height="120" viewBox="0 0 120 120"><circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="#283447" stroke-width="${sw}"/>${segs}<text x="${cx}" y="${cy-4}" text-anchor="middle" font-size="17" font-weight="700" fill="#F1F5F9" font-family="Tajawal">${total}</text><text x="${cx}" y="${cy+11}" text-anchor="middle" font-size="9" fill="#475569" font-family="Tajawal">إجمالي</text></svg>`;
-}
-
-// ── LIST ──
-function rList(){
-  let list=mails.filter(m=>{
-    if(view==='inbox')return m.type==='in'&&!m.archived;
-    if(view==='outbox')return m.type==='out'&&!m.archived;
-    if(view==='archive')return m.archived;
+/* ===== تهيئة Firebase ===== */
+function initFirebase() {
+  try {
+    if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+    db = firebase.firestore();
+    // تمكين الثبات على الشبكة (offline persistence للمتصفح)
+    db.settings({ experimentalForceLongPolling: false });
     return true;
-  }).filter(m=>!Q||(m.subject+m.ref+m.party+m.notes).includes(Q));
-  const cp=view==='inbox'?'الجهة المُرسِلة':view==='outbox'?'الجهة المُرسَل إليها':'الجهة';
-  const tot=list.length,nw=list.filter(m=>m.status==='new').length;
-  const pe=list.filter(m=>m.status==='pending').length,dn=list.filter(m=>m.status==='done').length;
-  document.getElementById('ct').innerHTML=`
-    <div class="sg" style="grid-template-columns:repeat(4,minmax(130px,1fr));margin-bottom:14px">
-      ${S('ti-list','إجمالي',tot,'var(--bl-bg)','var(--bl-l)')}
-      ${S('ti-bell-ringing','جديد',nw,'var(--rd-bg)','var(--rd)')}
-      ${S('ti-clock','قيد المعالجة',pe,'var(--am-bg)','var(--am)')}
-      ${S('ti-check','منجز',dn,'var(--gr-bg)','var(--gr)')}
-    </div>
-    <div class="tc">
-      <div class="th">
-        <div class="tt"><i class="ti ti-${view==='inbox'?'inbox':view==='outbox'?'send':'archive'}"></i>${list.length} رسالة</div>
-        <div class="fc">
-          <button class="fp on" onclick="filt(this,'all')">الكل</button>
-          <button class="fp" onclick="filt(this,'new')">جديد</button>
-          <button class="fp" onclick="filt(this,'pending')">قيد</button>
-          <button class="fp" onclick="filt(this,'done')">منجز</button>
-        </div>
-      </div>
-      ${list.length===0?`<div class="es"><i class="ti ti-inbox"></i><div>لا توجد رسائل</div></div>`:`
-      <div style="overflow-x:auto"><table>
-        <colgroup>${view==='archive'?'<col style="width:55px">':''}<col style="width:105px"><col style="width:90px"><col><col style="width:140px"><col style="width:58px"><col style="width:90px"><col style="width:24px"></colgroup>
-        <thead><tr>${view==='archive'?'<th>النوع</th>':''}<th>الرقم الإشاري</th><th>التاريخ</th><th>الموضوع</th><th>${cp}</th><th>مرفق</th><th>الحالة</th><th></th></tr></thead>
-        <tbody>${list.map(m=>`<tr onclick="openDetail('${m.id}')" data-st="${m.status}">
-          ${view==='archive'?`<td><span class="${m.type==='in'?'ti':'to'}">${m.type==='in'?'وارد':'صادر'}</span></td>`:''}
-          <td style="font-family:monospace;font-size:11px">${m.ref}</td>
-          <td style="color:var(--tx3)">${m.date}</td>
-          <td>${m.subject}</td><td>${m.party||'—'}</td>
-          <td>${m.att?`<span class="ac" style="cursor:pointer" onclick="event.stopPropagation();quickView('${m.id}')"><i class="ti ti-eye"></i>عرض</span>`:'—'}</td>
-          <td>${badge(m.status)}</td>
-          <td><i class="ti ti-chevron-left" style="color:var(--tx3);font-size:13px"></i></td>
-        </tr>`).join('')}</tbody>
-      </table></div>`}
-    </div>`;
-}
-function filt(btn,s){
-  document.querySelectorAll('.fp').forEach(b=>b.classList.remove('on'));
-  btn.classList.add('on');
-  document.querySelectorAll('[data-st]').forEach(r=>{r.style.display=(s==='all'||r.dataset.st===s)?'':'none';});
+  } catch(e) {
+    console.error('Firebase init error:', e);
+    showFirebaseError('فشل تهيئة Firebase: ' + e.message);
+    return false;
+  }
 }
 
-// ── QUICK VIEW (من الجدول مباشرة) ──
-function quickView(id){
-  const m=mails.find(x=>x.id===id);if(!m||!m.att)return;
-  const isPDF=m.attName&&m.attName.toLowerCase().endsWith('.pdf');
-  openViewer(m.att,m.attName,isPDF);
+/* ===== واجهة حالة الاتصال ===== */
+function setConnStatus(state, text) {
+  const dot  = document.getElementById('connDot');
+  const conn = document.getElementById('conn');
+  dot.className = state; // ok | err | wait
+  conn.textContent = text;
 }
 
-// ── FULL VIEWER ──
-function openViewer(src,name,isPDF){
-  document.body.insertAdjacentHTML('beforeend',`
-    <div class="viewer-overlay" id="vov">
-      <div class="viewer-hd">
-        <i class="ti ti-${isPDF?'file-type-pdf':'photo'}" style="font-size:18px;color:${isPDF?'#EF4444':'#3B82F6'}"></i>
-        <div class="viewer-title">${name||'صورة المراسلة'}</div>
-        <button class="btn btn-gr btn-sm" onclick="dlSrc('${src}','${name||'file'}')"><i class="ti ti-download"></i> تحميل</button>
-        <button class="btn btn-rd btn-sm" onclick="document.getElementById('vov').remove()"><i class="ti ti-x"></i> إغلاق</button>
-      </div>
-      <div class="viewer-body">
-        ${isPDF
-          ?`<iframe src="${src}" title="${name}"></iframe>`
-          :`<img src="${src}" alt="${name}" style="width:100%;height:100%;object-fit:contain">`
+function showFirebaseError(msg) {
+  const banner = document.getElementById('firebaseErrBanner');
+  document.getElementById('firebaseErrMsg').textContent = msg || 'تعذر الاتصال بـ Firebase';
+  banner.classList.add('show');
+  setConnStatus('err', 'غير متصل');
+}
+
+function hideFirebaseError() {
+  document.getElementById('firebaseErrBanner').classList.remove('show');
+}
+
+/* ===== الدخول والخروج ===== */
+function normDigits(s) {
+  return String(s || '').replace(/[٠-٩]/g, d => '٠١٢٣٤٥٦٧٨٩'.indexOf(d))
+                        .replace(/[۰-۹]/g, d => '۰۱۲۳۴۵۶۷۸۹'.indexOf(d)).trim();
+}
+
+function login() {
+  const p = normDigits(document.getElementById('pass').value);
+  if (p !== MANAGER_PASSWORD) { document.getElementById('loginErr').classList.remove('hide'); return; }
+  document.getElementById('loginErr').classList.add('hide');
+  document.getElementById('loginScreen').classList.add('hide');
+  document.getElementById('app').classList.remove('hide');
+  startListen();
+}
+
+function logout() {
+  stopListen();
+  document.getElementById('app').classList.add('hide');
+  document.getElementById('loginScreen').classList.remove('hide');
+  document.getElementById('pass').value = '';
+  mails = []; firstLoad = true; knownIds = new Set(); retryCount = 0;
+  hideFirebaseError();
+}
+
+/* ===== الاستماع الفوري لـ Firestore ===== */
+function stopListen() {
+  if (unsub) { unsub(); unsub = null; }
+  if (retryTimer) { clearTimeout(retryTimer); retryTimer = null; }
+}
+
+function startListen() {
+  stopListen();
+  if (!db) { if (!initFirebase()) return; }
+
+  setConnStatus('wait', 'جاري الاتصال بـ Firebase...');
+
+  try {
+    unsub = db.collection(COLLECTION_NAME)
+              .orderBy('createdAt', 'desc')
+              .onSnapshot(
+      snap => {
+        // ✅ نجح الاتصال
+        hideFirebaseError();
+        retryCount = 0;
+
+        const incoming = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+        const newOnes  = incoming.filter(m => !knownIds.has(m.id));
+        mails = incoming;
+        render();
+
+        if (firstLoad) {
+          knownIds   = new Set(mails.map(m => m.id));
+          firstLoad  = false;
+          setConnStatus('ok', 'متصل — يتم عرض أي بريد جديد فوراً');
+          return;
         }
-      </div>
-    </div>`);
-}
 
-function dlSrc(src,name){
-  const a=document.createElement('a');a.href=src;a.download=name;a.click();
-}
-
-// ── REPORTS ──
-function rRep(){
-  if(role!=='mgr'){go('inbox');return;}
-  const ac=mails.filter(m=>!m.archived);
-  const rows=[
-    {l:'بريد وارد',v:ac.filter(m=>m.type==='in').length,c:'var(--bl)'},
-    {l:'بريد صادر',v:ac.filter(m=>m.type==='out').length,c:'var(--gr)'},
-    {l:'أولوية عالية',v:ac.filter(m=>m.priority==='high').length,c:'var(--rd)'},
-    {l:'مؤرشف',v:mails.filter(m=>m.archived).length,c:'var(--pu)'},
-  ];
-  const maxR=Math.max(...rows.map(r=>r.v),1);
-  const pm={};ac.forEach(m=>{if(m.party)pm[m.party]=(pm[m.party]||0)+1;});
-  const tp=Object.entries(pm).sort((a,b)=>b[1]-a[1]).slice(0,5);
-  const maxP=tp[0]?.[1]||1;
-  document.getElementById('ct').innerHTML=`
-    <div class="sg" style="margin-bottom:14px">
-      ${S('ti-mail','إجمالي',mails.length,'var(--bl-bg)','var(--bl-l)')}
-      ${S('ti-check','نسبة الإنجاز',Math.round(ac.filter(m=>m.status==='done').length/(ac.length||1)*100)+'%','var(--gr-bg)','var(--gr)')}
-      ${S('ti-flame','عاجل',ac.filter(m=>m.priority==='high').length,'var(--rd-bg)','var(--rd)')}
-      ${S('ti-clock','متوسط المعالجة','3 أيام','var(--am-bg)','var(--am)')}
-    </div>
-    <div class="rg">
-      <div class="cc"><div class="cc-t"><i class="ti ti-chart-bar"></i> توزيع البريد</div>
-        ${rows.map(r=>`<div class="pbr"><div class="pbh"><span class="pbl">${r.l}</span><span class="pbv">${r.v}</span></div><div class="pbt"><div class="pbf" style="width:${Math.round(r.v/maxR*100)}%;background:${r.c}"></div></div></div>`).join('')}
-        <div style="display:flex;gap:8px;margin-top:12px">
-          <button class="btn btn-bl btn-sm" onclick="expCSV()"><i class="ti ti-download"></i> CSV</button>
-          <button class="btn btn-gh btn-sm" onclick="printA()"><i class="ti ti-printer"></i> طباعة</button>
-        </div>
-      </div>
-      <div class="cc"><div class="cc-t"><i class="ti ti-building"></i> أكثر الجهات مراسلة</div>
-        ${tp.map(([n,v])=>`<div class="pbr"><div class="pbh"><span class="pbl">${n}</span><span class="pbv">${v}</span></div><div class="pbt"><div class="pbf" style="width:${Math.round(v/maxP*100)}%;background:var(--bl)"></div></div></div>`).join('')||'<div style="color:var(--tx3);font-size:11px">لا توجد بيانات</div>'}
-      </div>
-    </div>`;
-}
-
-// ── DETAIL ──
-function openDetail(id){
-  const m=mails.find(x=>x.id===id);if(!m)return;
-  const isMgr=role==='mgr';
-  const isPDF=m.attName&&m.attName.toLowerCase().endsWith('.pdf');
-  showModal(`
-    <div class="mh">
-      <div class="mt"><span class="${m.type==='in'?'ti':'to'}">${m.type==='in'?'وارد':'صادر'}</span>${m.ref}</div>
-      <button class="mc" onclick="closeModal()"><i class="ti ti-x"></i></button>
-    </div>
-    <div class="md">
-      <div class="dr"><span class="dk">الرقم الإشاري</span><span class="dv" style="font-family:monospace">${m.ref}</span></div>
-      <div class="dr"><span class="dk">التاريخ</span><span class="dv">${m.date}</span></div>
-      <div class="dr"><span class="dk">${m.type==='in'?'من':'إلى'}</span><span class="dv">${m.party||'—'}</span></div>
-      <div class="dr"><span class="dk">الموضوع</span><span class="dv">${m.subject}</span></div>
-      <div class="dr"><span class="dk">الأولوية</span><span class="dv">${m.priority==='high'?'<span class="b bn">عاجل</span>':'<span class="b ba">عادي</span>'}</span></div>
-      <div class="dr"><span class="dk">الحالة</span><span class="dv">${badge(m.status)}</span></div>
-      ${m.notes?`<div class="dr"><span class="dk">ملاحظات</span><span class="dv">${m.notes}</span></div>`:''}
-
-      ${m.att?`
-      <div class="att-section">
-        <div class="att-section-title">
-          <i class="ti ti-${isPDF?'file-type-pdf':'photo'}" style="font-size:14px;color:${isPDF?'#EF4444':'#3B82F6'}"></i>
-          صورة المراسلة — ${m.attName||'مرفق'}
-        </div>
-        ${isPDF
-          ?`<iframe src="${m.att}" class="att-pdf-frame" title="${m.attName}"></iframe>`
-          :`<img src="${m.att}" class="att-img-preview" onclick="openViewer('${m.att}','${m.attName||'صورة'}',false)" alt="صورة المراسلة">`
+        if (newOnes.length) {
+          knownIds = new Set(mails.map(m => m.id));
+          setConnStatus('ok', 'تم استلام تحديث جديد الآن ✓');
+          setTimeout(() => setConnStatus('ok', 'متصل — يتم عرض أي بريد جديد فوراً'), 3000);
+          toast('وصل بريد جديد للمدير 📬');
+          notifyNewMail(newOnes[0]);
+          try { if (navigator.vibrate) navigator.vibrate([180, 80, 180]); } catch(e) {}
+        } else {
+          setConnStatus('ok', 'متصل — يتم عرض أي بريد جديد فوراً');
         }
-        <div class="att-actions">
-          <button class="btn btn-bl btn-sm" onclick="openViewer('${m.att}','${m.attName||'ملف'}',${isPDF})">
-            <i class="ti ti-${isPDF?'arrows-maximize':'zoom-in'}"></i> ${isPDF?'توسيع':'تكبير'}
-          </button>
-          <button class="btn btn-gr btn-sm" onclick="dlSrc('${m.att}','${m.attName||'file'}')">
-            <i class="ti ti-download"></i> تحميل
-          </button>
-        </div>
-      </div>`:''}
+      },
+      err => {
+        // ❌ خطأ Firebase
+        console.error('Firestore onSnapshot error:', err);
+        unsub = null;
 
-      ${m.img?`
-      <div class="att-section" style="margin-top:8px">
-        <div class="att-section-title">
-          <i class="ti ti-photo" style="font-size:14px;color:#3B82F6"></i>
-          صورة إضافية — ${m.imgName||'صورة'}
-        </div>
-        <img src="${m.img}" class="att-img-preview" onclick="openViewer('${m.img}','${m.imgName||'صورة'}',false)" alt="صورة إضافية">
-        <div class="att-actions">
-          <button class="btn btn-bl btn-sm" onclick="openViewer('${m.img}','${m.imgName||'صورة'}',false)">
-            <i class="ti ti-zoom-in"></i> تكبير
-          </button>
-          <button class="btn btn-gr btn-sm" onclick="dlSrc('${m.img}','${m.imgName||'image'}')">
-            <i class="ti ti-download"></i> تحميل
-          </button>
-        </div>
-      </div>`:''}
+        let errMsg = 'تعذر الاتصال بـ Firebase';
+        if (err.code === 'permission-denied')  errMsg = 'خطأ في صلاحيات Firebase — تحقق من Rules في Console';
+        else if (err.code === 'unavailable')   errMsg = 'Firebase غير متاح — تحقق من الاتصال بالإنترنت';
+        else if (err.code === 'unauthenticated') errMsg = 'Firebase: غير مصرح — يرجى التحقق من الإعدادات';
+        else if (err.message)                  errMsg = 'خطأ Firebase: ' + err.code;
 
-      ${isMgr?`<div class="fg" style="margin-top:6px">
-        <label class="fl">تغيير الحالة</label>
-        <select class="fi" id="ss" style="max-width:200px">
-          <option value="new" ${m.status==='new'?'selected':''}>جديد</option>
-          <option value="pending" ${m.status==='pending'?'selected':''}>قيد المعالجة</option>
-          <option value="done" ${m.status==='done'?'selected':''}>منجز</option>
-        </select></div>`:''}
-    </div>
-    <div class="mf">
-      ${isMgr?`<button class="btn btn-bl btn-sm" onclick="updSt('${id}')"><i class="ti ti-check"></i> حفظ</button>`:''}
-      ${!m.archived?`<button class="btn btn-am btn-sm" onclick="arch('${id}')"><i class="ti ti-archive"></i> أرشفة</button>`
-                   :`<button class="btn btn-gr btn-sm" onclick="unarch('${id}')"><i class="ti ti-inbox"></i> إلغاء أرشفة</button>`}
-      <button class="btn btn-gh btn-sm" onclick="pdfExp('${id}')"><i class="ti ti-file-type-pdf"></i> PDF</button>
-      ${isMgr?`<button class="btn btn-rd btn-sm" onclick="confDel('${id}')"><i class="ti ti-trash"></i> حذف</button>`:''}
-      <button class="btn btn-gh btn-sm" onclick="closeModal()">إغلاق</button>
-    </div>`,'wide');
-}
+        showFirebaseError(errMsg);
+        setConnStatus('err', 'انقطع الاتصال');
 
-async function updSt(id){const m=mails.find(x=>x.id===id);if(!m)return;m.status=document.getElementById('ss').value;closeModal();await saveMail(m);toast('✓ تم تحديث الحالة');}
-async function arch(id){const m=mails.find(x=>x.id===id);if(!m)return;m.archived=true;m.status='archived';closeModal();await saveMail(m);toast('✓ تمت الأرشفة');}
-async function unarch(id){const m=mails.find(x=>x.id===id);if(!m)return;m.archived=false;m.status='done';closeModal();await saveMail(m);toast('✓ إلغاء الأرشفة');}
-function confDel(id){if(confirm('حذف هذا البريد نهائياً؟')){closeModal();delMail(id);toast('تم الحذف');}}
-
-
-// ── UPLOAD ATTACHMENTS ──
-function safeFileName(name){
-  const n=(name||'file').replace(/[^\u0600-\u06FFa-zA-Z0-9._-]/g,'_');
-  return Date.now()+'_'+Math.random().toString(36).slice(2,8)+'_'+n;
-}
-function timeoutPromise(p,ms,label){
-  return Promise.race([
-    p,
-    new Promise((_,rej)=>setTimeout(()=>rej(new Error(label||'timeout')),ms))
-  ]);
-}
-function readAsDataURL(file){
-  return new Promise((resolve,reject)=>{
-    const r=new FileReader();
-    r.onload=e=>resolve(e.target.result);
-    r.onerror=()=>reject(new Error('read-error'));
-    r.readAsDataURL(file);
-  });
-}
-async function compressImageFile(file){
-  const dataUrl=await readAsDataURL(file);
-  if(!file.type.startsWith('image/'))return dataUrl;
-  return new Promise(resolve=>{
-    const img=new Image();
-    img.onload=()=>{
-      const max=1400;
-      let w=img.width,h=img.height;
-      if(w>max||h>max){
-        const ratio=Math.min(max/w,max/h);w=Math.round(w*ratio);h=Math.round(h*ratio);
+        // إعادة المحاولة تلقائياً بعد تأخير متزايد
+        retryCount++;
+        const delay = Math.min(RETRY_DELAY_MS * retryCount, 30000);
+        setConnStatus('wait', `إعادة المحاولة خلال ${Math.round(delay/1000)} ثانية...`);
+        retryTimer = setTimeout(() => {
+          if (document.getElementById('app') && !document.getElementById('app').classList.contains('hide')) {
+            toast('جاري إعادة الاتصال بـ Firebase...', false);
+            startListen();
+          }
+        }, delay);
       }
-      const canvas=document.createElement('canvas');canvas.width=w;canvas.height=h;
-      const ctx=canvas.getContext('2d');ctx.drawImage(img,0,0,w,h);
-      resolve(canvas.toDataURL('image/jpeg',0.72));
-    };
-    img.onerror=()=>resolve(dataUrl);
-    img.src=dataUrl;
+    );
+  } catch(e) {
+    console.error('startListen exception:', e);
+    showFirebaseError('خطأ غير متوقع: ' + e.message);
+  }
+}
+
+function refresh() {
+  retryCount = 0;
+  startListen();
+  toast('جاري إعادة التحميل...');
+}
+
+/* ===== الإشعارات ===== */
+function requestNotify() {
+  if (!('Notification' in window)) { toast('المتصفح لا يدعم الإشعارات', true); return; }
+  Notification.requestPermission().then(p => {
+    toast(p === 'granted' ? 'تم تفعيل الإشعارات ✓' : 'لم يتم السماح بالإشعارات', p !== 'granted');
   });
 }
-async function uploadDataUrl(dataUrl,name,folder){
-  if(!dataUrl)return null;
-  // نحاول Firebase Storage، لكن لا نترك العملية معلّقة؛ بعد 8 ثواني نرجع للحفظ داخل Firestore.
-  if(storage){
-    try{
-      const ref=storage.ref().child(`${folder}/${safeFileName(name)}`);
-      await timeoutPromise(ref.putString(dataUrl,'data_url'),8000,'storage-timeout');
-      return await timeoutPromise(ref.getDownloadURL(),5000,'url-timeout');
-    }catch(e){console.warn('Storage upload failed/timeout, fallback to Firestore/base64',e);}
-  }
-  // احتياط مضمون للصور المضغوطة والملفات الصغيرة: حفظ Base64 داخل Firestore.
-  if(dataUrl.length>850000){
-    throw new Error('attachment-too-large');
-  }
-  return dataUrl;
+
+function notifyNewMail(m) {
+  if (!('Notification' in window) || Notification.permission !== 'granted') return;
+  try {
+    new Notification('وصل بريد جديد 📬', {
+      body:      (m.subject || 'مراسلة جديدة') + ' — ' + (m.party || m.from || ''),
+      tag:       String(m.id),
+      renotify:  true
+    });
+  } catch(e) {}
 }
 
+/* ===== عرض البيانات ===== */
+function setFilter(f) {
+  filter = f;
+  document.querySelectorAll('[data-filter]').forEach(x => x.classList.toggle('on', x.dataset.filter === f));
+  render();
+}
 
-// ── ADD ──
-function openAdd(){
-  pR=null;pN=null;iD=null;iN=null;
-  showModal(`
-    <div class="mh">
-      <div class="mt"><i class="ti ti-mail-plus"></i> إضافة بريد جديد</div>
-      <button class="mc" onclick="closeModal()"><i class="ti ti-x"></i></button>
+function getStatus(m) {
+  if (m.archived) return 'archive';
+  return m.status || 'new';
+}
+
+function badge(status) {
+  if (status === 'new')     return '<span class="badge new">جديد</span>';
+  if (status === 'pending') return '<span class="badge pending">قيد المعالجة</span>';
+  if (status === 'done')    return '<span class="badge done">منجز</span>';
+  return '<span class="badge arch">الأرشيف</span>';
+}
+
+function arType(t) { return t === 'out' ? 'صادر' : 'وارد'; }
+
+function render() {
+  const active = mails.filter(m => m.type === 'in' && !m.archived).length;
+  const nw     = mails.filter(m => !m.archived && getStatus(m) === 'new').length;
+  const pe     = mails.filter(m => !m.archived && getStatus(m) === 'pending').length;
+  const dn     = mails.filter(m => !m.archived && getStatus(m) === 'done').length;
+  document.getElementById('stActive').textContent  = active;
+  document.getElementById('stNew').textContent     = nw;
+  document.getElementById('stPending').textContent = pe;
+  document.getElementById('stDone').textContent    = dn;
+
+  let arr = [...mails];
+  if (filter === 'archive')      arr = arr.filter(m => m.archived);
+  else if (filter !== 'all')     arr = arr.filter(m => !m.archived && getStatus(m) === filter);
+  else                           arr = arr.filter(m => !m.archived);
+
+  const q = query.trim().toLowerCase();
+  if (q) arr = arr.filter(m => [m.subject, m.party, m.from, m.ref, m.notes, m.date].join(' ').toLowerCase().includes(q));
+
+  const list = document.getElementById('list');
+  if (!arr.length) { list.className = 'empty'; list.textContent = 'لا توجد مراسلات مطابقة'; return; }
+
+  list.className = '';
+  list.innerHTML = arr.map(m => `
+    <section class="card">
+      <div class="cardbody">
+        <div class="row"><span class="badge type">${arType(m.type)}</span>${badge(getStatus(m))}</div>
+        <div class="subject">${esc(m.subject || 'بدون موضوع')}</div>
+        <div class="meta">الرقم: ${esc(m.ref || 'غير محدد')}<br>الجهة: ${esc(m.party || m.from || 'غير محدد')}<br>التاريخ: ${esc(m.date || 'غير محدد')}</div>
+      </div>
+      <div class="actions"><button class="smallbtn openDetailsBtn" type="button" data-id="${escAttr(m.id)}">عرض المراسلة / تعديل الحالة</button></div>
+    </section>`).join('');
+}
+
+/* ===== تفاصيل المراسلة ===== */
+function firstExisting(m, keys) { for (const k of keys) { if (m[k]) return m[k]; } return ''; }
+
+function openDetails(id) {
+  const m = mails.find(x => String(x.id) === String(id));
+  if (!m) { toast('لم يتم العثور على المراسلة', true); return; }
+  const st  = getStatus(m);
+  const att = firstExisting(m, ['att','attachmentUrl','pdfUrl','fileUrl','scanUrl','file','url','uploadedFileUrl','attachment','documentUrl']);
+  const img = firstExisting(m, ['img','imageUrl','image','photoUrl','scanImageUrl','attachmentImageUrl','imageData','photo','scan']);
+  const html = `
+    <div class="drow"><b>الموضوع</b><span>${esc(m.subject || 'بدون موضوع')}</span></div>
+    <div class="drow"><b>الرقم</b><span>${esc(m.ref || 'غير محدد')}</span></div>
+    <div class="drow"><b>التاريخ</b><span>${esc(m.date || 'غير محدد')}</span></div>
+    <div class="drow"><b>الجهة</b><span>${esc(m.party || m.from || 'غير محدد')}</span></div>
+    <div class="drow"><b>الحالة الحالية</b><span id="currentStatusBadge">${badge(st)}</span></div>
+    ${m.notes ? `<div class="drow"><b>ملاحظات</b><span>${esc(m.notes)}</span></div>` : ''}
+    <div class="statusBox">
+      <label>تعديل الحالة</label>
+      <select id="modalStatusSelect" class="select" data-id="${escAttr(m.id)}">
+        <option value="new"     ${st === 'new'     ? 'selected' : ''}>جديد</option>
+        <option value="pending" ${st === 'pending' ? 'selected' : ''}>قيد المعالجة</option>
+        <option value="done"    ${st === 'done'    ? 'selected' : ''}>منجز</option>
+        <option value="archive" ${st === 'archive' ? 'selected' : ''}>الأرشيف</option>
+      </select>
     </div>
-    <div class="md">
-      <div class="fg"><label class="fl">نوع البريد</label>
-        <select class="fi" id="ft" onchange="tP()"><option value="in">وارد</option><option value="out">صادر</option></select>
-      </div>
-      <div class="fr">
-        <div class="fg"><label class="fl">الرقم الإشاري</label><input class="fi" id="fr2" placeholder="مثال: 8859/4.4"></div>
-        <div class="fg"><label class="fl">التاريخ</label><input class="fi" id="fd" type="date" value="${new Date().toISOString().split('T')[0]}"></div>
-      </div>
-      <div class="fg" id="pi"><label class="fl">الجهة المُرسِلة</label><input class="fi" id="ffr" placeholder="اسم الجهة"></div>
-      <div class="fg" id="po" style="display:none"><label class="fl">الجهة المُرسَل إليها</label><input class="fi" id="fto" placeholder="اسم الجهة"></div>
-      <div class="fg"><label class="fl">الموضوع</label><input class="fi" id="fs" placeholder="موضوع البريد"></div>
-      <div class="fr">
-        <div class="fg"><label class="fl">الأولوية</label><select class="fi" id="fp2"><option value="normal">عادي</option><option value="high">عاجل</option></select></div>
-        <div class="fg"><label class="fl">الحالة</label><select class="fi" id="fst"><option value="new">جديد</option><option value="pending">قيد المعالجة</option><option value="done">منجز</option></select></div>
-      </div>
-      <div class="fg"><label class="fl">ملاحظات</label><textarea class="fi" id="fn" rows="2" placeholder="ملاحظات..."></textarea></div>
-      <div class="abox">
-        <div class="abox-l"><i class="ti ti-paperclip"></i> إرفاق صورة / PDF المراسلة ليظهر للمدير</div>
-        <div class="agr">
-          <div class="acard" onclick="document.getElementById('fatt').click()">
-            <div class="aci air"><i class="ti ti-file-type-pdf"></i></div>
-            <div class="acn">PDF أو صورة</div>
-            <div class="acs" id="al">اضغط للرفع</div>
-          </div>
-          <div class="acard" onclick="document.getElementById('fimg').click()">
-            <div class="aci aib"><i class="ti ti-camera"></i></div>
-            <div class="acn">صورة إضافية</div>
-            <div class="acs" id="il">اضغط للرفع</div>
-          </div>
-        </div>
-        <input type="file" id="fatt" accept=".pdf,image/*" style="display:none" onchange="hA(this)">
-        <input type="file" id="fimg" accept="image/*" style="display:none" onchange="hI(this)">
-        <div id="apv"></div>
-      </div>
+    <div class="modalactions">
+      ${att ? `<a class="smallbtn" href="${escAttr(att)}" target="_blank" rel="noopener">فتح الملف / PDF</a>`
+            : '<button class="smallbtn disabled" type="button">لا يوجد ملف</button>'}
+      ${img ? `<a class="smallbtn" href="${escAttr(img)}" target="_blank" rel="noopener">فتح الصورة</a>`
+            : '<button class="smallbtn disabled" type="button">لا توجد صورة</button>'}
     </div>
-    <div class="mf">
-      <button class="btn btn-bl btn-sm" id="saveBtn" onclick="saveNew()"><i class="ti ti-check"></i> حفظ البريد</button>
-      <button class="btn btn-gh btn-sm" onclick="closeModal()">إلغاء</button>
-    </div>`);
-}
-function tP(){const t=document.getElementById('ft').value;document.getElementById('pi').style.display=t==='in'?'':'none';document.getElementById('po').style.display=t==='out'?'':'none';}
-async function hA(inp){
-  const f=inp.files[0];if(!f)return;
-  document.getElementById('al').textContent='جاري التجهيز...';
-  try{
-    pR=f.type.startsWith('image/')?await compressImageFile(f):await readAsDataURL(f);
-    pN=f.name;document.getElementById('al').textContent=f.name.length>16?f.name.substring(0,16)+'…':f.name;updPv();
-  }catch(e){pR=null;pN=null;document.getElementById('al').textContent='فشل الرفع';toast('تعذر قراءة الملف',true);}
-}
-async function hI(inp){
-  const f=inp.files[0];if(!f)return;
-  document.getElementById('il').textContent='جاري التجهيز...';
-  try{
-    iD=await compressImageFile(f);iN=f.name;document.getElementById('il').textContent=f.name.length>16?f.name.substring(0,16)+'…':f.name;updPv();
-  }catch(e){iD=null;iN=null;document.getElementById('il').textContent='فشل الرفع';toast('تعذر قراءة الصورة',true);}
+    ${img ? `<div class="preview"><img src="${escAttr(img)}" alt="صورة المراسلة" onerror="this.parentElement.style.display='none'" /></div>` : ''}`;
+  document.getElementById('modalContent').innerHTML = html;
+  document.getElementById('detailsModal').classList.add('show');
 }
 
-function updPv(){
-  const p=document.getElementById('apv');if(!p)return;
-  let h='';
-  const isPDF=pN&&pN.toLowerCase().endsWith('.pdf');
-  if(pR)h+=`<div class="apv" style="margin-top:7px"><i class="ti ti-${isPDF?'file-type-pdf':'photo'}" style="font-size:18px;color:${isPDF?'#EF4444':'#3B82F6'}"></i><div style="flex:1;font-size:12px;font-weight:500;color:var(--tx)">${pN}</div><button onclick="pR=null;pN=null;document.getElementById('al').textContent='اضغط للرفع';updPv()" style="background:var(--rd-bg);border:none;border-radius:6px;width:22px;height:22px;color:var(--rd);cursor:pointer;font-size:12px;display:flex;align-items:center;justify-content:center"><i class="ti ti-x"></i></button></div>`;
-  if(iD)h+=`<div class="apv" style="margin-top:7px"><img src="${iD}" style="width:40px;height:40px;object-fit:cover;border-radius:6px;flex-shrink:0"><div style="flex:1;font-size:12px;font-weight:500;color:var(--tx)">${iN}</div><button onclick="iD=null;iN=null;document.getElementById('il').textContent='اضغط للرفع';updPv()" style="background:var(--rd-bg);border:none;border-radius:6px;width:22px;height:22px;color:var(--rd);cursor:pointer;font-size:12px;display:flex;align-items:center;justify-content:center"><i class="ti ti-x"></i></button></div>`;
-  p.innerHTML=h;
-}
-async function saveNew(){
-  const type=document.getElementById('ft').value;
-  const sub=document.getElementById('fs').value.trim();
-  if(!sub){toast('يرجى إدخال الموضوع',true);return;}
-  const btn=document.getElementById('saveBtn');
-  if(btn){btn.disabled=true;btn.style.opacity='.6';btn.innerHTML='<i class="ti ti-loader"></i> جاري الحفظ...';}
-  const party=type==='in'?document.getElementById('ffr').value.trim():document.getElementById('fto').value.trim();
-  let attUrl=null,imgUrl=null;
-  try{
-    if(pR||iD)toast('جاري إرفاق الملف...');
-    attUrl=pR?await uploadDataUrl(pR,pN||'attachment','mail-attachments'):null;
-    imgUrl=iD?await uploadDataUrl(iD,iN||'image','mail-images'):null;
-  }catch(e){
-    if(btn){btn.disabled=false;btn.style.opacity='1';btn.innerHTML='<i class="ti ti-check"></i> حفظ البريد';}
-    toast('المرفق كبير أو تعذر رفعه. جرّب صورة أصغر أو PDF أقل من 600KB، أو فعّل Firebase Storage.',true);
-    return;
-  }
-  const mail={id:'L'+Date.now(),type,ref:document.getElementById('fr2').value.trim()||'غير محدد',
-    date:document.getElementById('fd').value,party,subject:sub,
-    status:document.getElementById('fst').value,priority:document.getElementById('fp2').value,
-    notes:document.getElementById('fn').value.trim(),archived:false,
-    att:attUrl,attName:pN||null,img:imgUrl,imgName:iN||null,
-    createdAt:new Date().toISOString()};
-  try{
-    await saveMail(mail,true);
-    closeModal();
-    toast('✓ تم حفظ البريد'+(type==='in'?' — إشعار للمدير':''));
-  }catch(e){
-    if(btn){btn.disabled=false;btn.style.opacity='1';btn.innerHTML='<i class="ti ti-check"></i> حفظ البريد';}
-    toast('تعذر حفظ البريد. تحقق من الاتصال أو صلاحيات Firebase.',true);
+function closeDetails() { document.getElementById('detailsModal').classList.remove('show'); }
+
+async function changeStatus(id, val) {
+  const m = mails.find(x => String(x.id) === String(id));
+  if (!m) { toast('لم يتم العثور على المراسلة', true); return; }
+  const archived = val === 'archive';
+  const status   = archived ? 'done' : val;
+  try {
+    await db.collection(COLLECTION_NAME).doc(id).set(
+      { status, archived, statusUpdatedAt: firebase.firestore.FieldValue.serverTimestamp() },
+      { merge: true }
+    );
+    const fake = { ...m, status, archived };
+    const b = document.getElementById('currentStatusBadge');
+    if (b) b.innerHTML = badge(getStatus(fake));
+    toast('تم تعديل الحالة بنجاح ✓');
+  } catch(e) {
+    console.error(e);
+    toast('حدث خطأ أثناء تعديل الحالة: ' + (e.code || e.message), true);
   }
 }
 
+/* ===== أدوات مساعدة ===== */
+function toast(msg, bad = false) {
+  const t = document.createElement('div');
+  t.className  = 'toast' + (bad ? ' bad' : '');
+  t.textContent = msg;
+  document.body.appendChild(t);
+  setTimeout(() => t.remove(), 2400);
+}
+function esc(s) {
+  return String(s ?? '').replace(/[&<>'"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#039;','"':'&quot;'}[c]));
+}
+function escAttr(s) { return esc(s).replace(/`/g, ''); }
 
-// ── EXPORT ──
-function pdfExp(id){
-  const m=mails.find(x=>x.id===id);if(!m)return;
-  const w=window.open('','_blank');
-  w.document.write(`<!DOCTYPE html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><title>بريد ${m.ref}</title><style>body{font-family:Tajawal,sans-serif;padding:24px;color:#1a1a18}.hd{border-bottom:2px solid #185FA5;padding-bottom:10px;margin-bottom:14px}h2{color:#185FA5;font-size:15px}.row{display:flex;justify-content:space-between;padding:6px 0;border-bottom:0.5px solid #eee;font-size:12px}.k{color:#666}.v{font-weight:500}.ft{margin-top:18px;font-size:10px;color:#aaa;border-top:1px solid #eee;padding-top:7px;display:flex;justify-content:space-between}</style></head><body><div class="hd"><h2>المركز الوطني لمكافحة الأمراض — إدارة التطعيمات</h2><div style="font-size:11px;color:#666">${new Date().toLocaleDateString('ar-LY')}</div></div><div class="row"><span class="k">الرقم الإشاري</span><span class="v" style="font-family:monospace">${m.ref}</span></div><div class="row"><span class="k">التاريخ</span><span class="v">${m.date}</span></div><div class="row"><span class="k">النوع</span><span class="v">${m.type==='in'?'بريد وارد':'بريد صادر'}</span></div><div class="row"><span class="k">${m.type==='in'?'من':'إلى'}</span><span class="v">${m.party||'—'}</span></div><div class="row"><span class="k">الموضوع</span><span class="v">${m.subject}</span></div><div class="row"><span class="k">الحالة</span><span class="v">${m.status}</span></div>${m.notes?`<div class="row"><span class="k">ملاحظات</span><span class="v">${m.notes}</span></div>`:''}<div class="ft"><span>wonderful-frangollo-f76092.netlify.app</span><span>إدارة التطعيمات</span></div></body></html>`);
-  w.document.close();w.print();
-}
-function expCSV(){
-  const rows=[['النوع','الرقم الإشاري','التاريخ','الجهة','الموضوع','الحالة','ملاحظات']];
-  mails.forEach(m=>rows.push([m.type==='in'?'وارد':'صادر',m.ref,m.date,m.party,m.subject,m.status,m.notes||'']));
-  const csv='\uFEFF'+rows.map(r=>r.map(c=>`"${String(c).replace(/"/g,'""')}"`).join(',')).join('\n');
-  const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'}));a.download='بريد_التطعيمات.csv';a.click();toast('✓ تم التصدير');
-}
-function printA(){
-  const rows=mails.map(m=>`<tr><td>${m.type==='in'?'وارد':'صادر'}</td><td>${m.ref}</td><td>${m.date}</td><td>${m.party}</td><td>${m.subject}</td><td>${m.status}</td></tr>`).join('');
-  const w=window.open('','_blank');
-  w.document.write(`<!DOCTYPE html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><title>تقرير</title><style>body{font-family:Tajawal,sans-serif;padding:20px}table{width:100%;border-collapse:collapse;font-size:12px}th,td{border:1px solid #ccc;padding:5px 8px;text-align:right}th{background:#f0f0f0}</style></head><body><h2 style="margin-bottom:8px">تقرير البريد — إدارة التطعيمات</h2><p style="font-size:11px;color:#666;margin-bottom:10px">${new Date().toLocaleDateString('ar-LY')} | ${mails.length} رسالة</p><table><thead><tr><th>النوع</th><th>الرقم الإشاري</th><th>التاريخ</th><th>الجهة</th><th>الموضوع</th><th>الحالة</th></tr></thead><tbody>${rows}</tbody></table></body></html>`);
-  w.document.close();w.print();
+/* ===== مستمعو الأحداث ===== */
+document.addEventListener('click', e => {
+  const openBtn  = e.target.closest('.openDetailsBtn');
+  if (openBtn) { openDetails(openBtn.dataset.id); return; }
+  const filterBtn = e.target.closest('[data-filter]');
+  if (filterBtn) { setFilter(filterBtn.dataset.filter); return; }
+});
+document.addEventListener('change', e => {
+  if (e.target && e.target.id === 'modalStatusSelect')
+    changeStatus(e.target.dataset.id, e.target.value);
+});
+
+document.getElementById('loginBtn').addEventListener('click', login);
+document.getElementById('pass').addEventListener('keydown', e => { if (e.key === 'Enter') login(); });
+document.getElementById('notifyBtn').addEventListener('click', requestNotify);
+document.getElementById('logoutBtn').addEventListener('click', logout);
+document.getElementById('refreshBtn').addEventListener('click', refresh);
+document.getElementById('retryBtn').addEventListener('click', () => { retryCount = 0; hideFirebaseError(); startListen(); });
+document.getElementById('q').addEventListener('input', e => { query = e.target.value; render(); });
+document.getElementById('closeModal').addEventListener('click', closeDetails);
+document.getElementById('detailsModal').addEventListener('click', e => { if (e.target.id === 'detailsModal') closeDetails(); });
+
+// إلغاء تسجيل Service Worker القديم
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.getRegistrations().then(regs => regs.forEach(r => r.unregister())).catch(() => {});
 }
 
-// ── MODAL ──
-function showModal(html,cls=''){
-  document.getElementById('modals').innerHTML=`<div class="mo" onclick="if(event.target.className==='mo')closeModal()"><div class="mb ${cls}">${html}</div></div>`;
-}
-function closeModal(){document.getElementById('modals').innerHTML='';}
-function toast(msg,err=false){
-  const w=document.getElementById('tw');
-  const d=document.createElement('div');
-  d.className=`tt2 ${err?'terr':'tok'}`;
-  d.innerHTML=`<i class="ti ti-${err?'alert-circle':'check'}"></i>${msg}`;
-  w.appendChild(d);setTimeout(()=>d.remove(),3000);
-}
-
-// ── HELPERS ──
-function badge(s){
-  const m={new:['bn','جديد'],pending:['bp','قيد المعالجة'],done:['bd','منجز'],archived:['ba','مؤرشف']};
-  const[c,l]=m[s]||['ba',s];return`<span class="b ${c}">${l}</span>`;
-}
-function seed(){return[
-  {id:'s01',type:'in',ref:'8859/4.4',date:'2026/05/11',party:'مدير مكتب الاستشاريين',subject:'خطة تفصيلية للرصد والاستجابة السريعة',status:'new',priority:'high',notes:'يطلب تجهيز خطة تفصيلية تحتوي على عدد النشاطات والأشخاص',archived:false,att:null,attName:null,img:null,imgName:null,createdAt:'2026-05-11'},
-  {id:'s02',type:'in',ref:'6540/4.4',date:'2026/05/11',party:'مدير الشؤون الإدارية',subject:'إلزام الموظفين بإبراز البطاقة عند الدخول',status:'done',priority:'normal',notes:'يُطبَّق اعتباراً من 2026/05/17',archived:false,att:null,attName:null,img:null,imgName:null,createdAt:'2026-05-10'},
-  {id:'s03',type:'in',ref:'7712/3.1',date:'2026/04/28',party:'إدارة تقنية المعلومات',subject:'توزيع أجهزة إلكترونية على فرق الرصد',status:'new',priority:'high',notes:'قائمة المستهدفين مطلوبة خلال أسبوع',archived:false,att:null,attName:null,img:null,imgName:null,createdAt:'2026-04-28'},
-  {id:'s04',type:'out',ref:'8116/16.6',date:'2026/04/28',party:'مدير إدارة الرصد والاستجابة',subject:'طلب خطة عمل تفصيلية للتطعيمات',status:'done',priority:'normal',notes:'تم الإرسال وانتظار الرد',archived:false,att:null,attName:null,img:null,imgName:null,createdAt:'2026-04-27'},
-  {id:'s05',type:'out',ref:'7205/11.2',date:'2026/04/15',party:'مدير الشؤون المالية',subject:'احتياجات الميزانية لبرنامج التطعيم 2026',status:'pending',priority:'normal',notes:'في انتظار الموافقة',archived:false,att:null,attName:null,img:null,imgName:null,createdAt:'2026-04-15'},
-  {id:'s06',type:'in',ref:'9901/6.3',date:'2026/05/02',party:'منظمة الصحة العالمية',subject:'تقرير متابعة برنامج التطعيم الوطني',status:'new',priority:'high',notes:'تقرير شامل يحتاج مراجعة عاجلة',archived:false,att:null,attName:null,img:null,imgName:null,createdAt:'2026-05-02'},
-  {id:'s07',type:'in',ref:'4421/1.5',date:'2026/05/08',party:'مدير إدارة التطعيمات الوقائية',subject:'طلب إحصائيات تغطية التطعيم الشهرية',status:'pending',priority:'normal',notes:'البيانات مطلوبة قبل نهاية الشهر',archived:false,att:null,attName:null,img:null,imgName:null,createdAt:'2026-05-08'},
-  {id:'s08',type:'out',ref:'3310/7.2',date:'2026/05/05',party:'مدير الخدمات الصحية بالمنطقة الغربية',subject:'جدول جلسات التطعيم الميداني — مايو 2026',status:'done',priority:'high',notes:'تم التنسيق مع الفرق الميدانية',archived:false,att:null,attName:null,img:null,imgName:null,createdAt:'2026-05-05'},
-  {id:'s09',type:'in',ref:'6540/2.8',date:'2026/03/20',party:'وزارة الصحة',subject:'تعميم بروتوكول التطعيم الجديد',status:'done',priority:'high',notes:'تم التنفيذ',archived:true,att:null,attName:null,img:null,imgName:null,createdAt:'2026-03-20'},
-  {id:'s10',type:'out',ref:'2205/9.1',date:'2026/04/25',party:'إدارة المستودعات الطبية',subject:'طلب تأمين جرعات اللقاحات للربع الثاني',status:'done',priority:'normal',notes:'تم التسليم',archived:false,att:null,attName:null,img:null,imgName:null,createdAt:'2026-04-25'},
-];}
+// تهيئة Firebase عند تحميل الصفحة
+initFirebase();
 </script>
 </body>
 </html>
