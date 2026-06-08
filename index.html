@@ -904,7 +904,29 @@ async function saveNew(){
 function pdfExp(id){
   const m=mails.find(x=>x.id===id);if(!m)return;
   const w=window.open('','_blank');
-  w.document.write(`<!DOCTYPE html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><title>بريد ${m.ref}</title><style>body{font-family:Tajawal,sans-serif;padding:24px;color:#1a1a18}.hd{border-bottom:2px solid #185FA5;padding-bottom:10px;margin-bottom:14px}h2{color:#185FA5;font-size:15px}.row{display:flex;justify-content:space-between;padding:6px 0;border-bottom:0.5px solid #eee;font-size:12px}.k{color:#666}.v{font-weight:500}.ft{margin-top:18px;font-size:10px;color:#aaa;border-top:1px solid #eee;padding-top:7px;display:flex;justify-content:space-between}</style></head><body><div class="hd"><h2>المركز الوطني لمكافحة الأمراض — إدارة التطعيمات</h2><div style="font-size:11px;color:#666">${new Date().toLocaleDateString('ar-LY')}</div></div><div class="row"><span class="k">الرقم الإشاري</span><span class="v" style="font-family:monospace">${m.ref}</span></div><div class="row"><span class="k">التاريخ</span><span class="v">${m.date}</span></div><div class="row"><span class="k">النوع</span><span class="v">${m.type==='in'?'بريد وارد':'بريد صادر'}</span></div><div class="row"><span class="k">${m.type==='in'?'من':'إلى'}</span><span class="v">${m.party||'—'}</span></div><div class="row"><span class="k">الموضوع</span><span class="v">${m.subject}</span></div><div class="row"><span class="k">الحالة</span><span class="v">${m.status}</span></div>${m.notes?`<div class="row"><span class="k">ملاحظات</span><span class="v">${m.notes}</span></div>`:''}<div class="ft"><span>NCDC — Libya</span><span>إدارة التطعيمات</span></div></body></html>`);
+  w.document.write(`<!DOCTYPE html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><title>بريد ${m.ref}</title><style>body{font-family:Tajawal,sans-serif;padding:24px;color:#1a1a18}.hd{border-bottom:2px solid #185FA5;padding-bottom:10px;margin-bottom:14px}h2{color:#185FA5;font-size:15px}.row{display:flex;justify-content:space-between;padding:6px 0;border-bottom:0.5px solid #eee;font-size:12px}.k{color:#666}.v{font-weight:500}.ft{margin-top:18px;font-size:10px;color:#aaa;border-top:1px solid #eee;padding-top:7px;display:flex;justify-content:space-between}</style></head><body><div class="hd"><h2>المركز الوطني لمكافحة الأمراض — إدارة التطعيمات</h2><div style="font-size:11px;color:#666">${new Date().toLocaleDateString('ar-LY')}</div></div><div class="row"><span class="k">الرقم الإشاري</span><span class="v" style="font-family:monospace">${m.ref}</span></div><div class="row"><span class="k">التاريخ</span><span class="v">${m.date}</span></div><div class="row"><span class="k">النوع</span><span class="v">${m.type==='in'?'بريد وارد':'بريد صادر'}</span></div><div class="row"><span class="k">${m.type==='in'?'من':'إلى'}</span><span class="v">${m.party||'—'}</span></div><div class="row"><span class="k">الموضوع</span><span class="v">${m.subject}</span></div><div class="row"><span class="k">الحالة</span><span class="v">${m.status}</span></div>${m.notes?`<div class="row"><span class="k">ملاحظات</span><span class="v">${m.notes}</span></div>`:''}<div class="ft"><span>NCDC — Libya</span><span>إدارة التطعيمات</span></div>
+<script>
+async function saveComment(id){
+    const comment = document.getElementById('managerCommentInput').value.trim();
+    if(!comment) return;
+    const mail = mails.find(m => m.id === id);
+    if(!mail) return;
+    mail.managerComment = comment;
+    await db.collection('mails').doc(id).set({ managerComment: comment }, { merge: true });
+    toast('✓ تم حفظ التعليق');
+}
+
+// عند فتح الموظف، عرض التعليق
+function renderManagerComment(m){
+    const comment = m.managerComment || '';
+    if(comment){
+        document.getElementById('detailContent').innerHTML +=
+        `<div class="drow"><b>تعليق المدير</b><span>${esc(comment)}</span></div>`;
+    }
+}
+</script>
+
+</body></html>`);
   w.document.close();w.print();
 }
 function expCSV(){
@@ -916,7 +938,29 @@ function expCSV(){
 function printA(){
   const rows=mails.map(m=>`<tr><td>${m.type==='in'?'وارد':'صادر'}</td><td>${m.ref}</td><td>${m.date}</td><td>${m.party}</td><td>${m.subject}</td><td>${m.status}</td></tr>`).join('');
   const w=window.open('','_blank');
-  w.document.write(`<!DOCTYPE html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><title>تقرير</title><style>body{font-family:Tajawal,sans-serif;padding:20px}table{width:100%;border-collapse:collapse;font-size:12px}th,td{border:1px solid #ccc;padding:5px 8px;text-align:right}th{background:#f0f0f0}</style></head><body><h2 style="margin-bottom:8px">تقرير البريد — إدارة التطعيمات</h2><p style="font-size:11px;color:#666;margin-bottom:10px">${new Date().toLocaleDateString('ar-LY')} | ${mails.length} رسالة</p><table><thead><tr><th>النوع</th><th>الرقم الإشاري</th><th>التاريخ</th><th>الجهة</th><th>الموضوع</th><th>الحالة</th></tr></thead><tbody>${rows}</tbody></table></body></html>`);
+  w.document.write(`<!DOCTYPE html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><title>تقرير</title><style>body{font-family:Tajawal,sans-serif;padding:20px}table{width:100%;border-collapse:collapse;font-size:12px}th,td{border:1px solid #ccc;padding:5px 8px;text-align:right}th{background:#f0f0f0}</style></head><body><h2 style="margin-bottom:8px">تقرير البريد — إدارة التطعيمات</h2><p style="font-size:11px;color:#666;margin-bottom:10px">${new Date().toLocaleDateString('ar-LY')} | ${mails.length} رسالة</p><table><thead><tr><th>النوع</th><th>الرقم الإشاري</th><th>التاريخ</th><th>الجهة</th><th>الموضوع</th><th>الحالة</th></tr></thead><tbody>${rows}</tbody></table>
+<script>
+async function saveComment(id){
+    const comment = document.getElementById('managerCommentInput').value.trim();
+    if(!comment) return;
+    const mail = mails.find(m => m.id === id);
+    if(!mail) return;
+    mail.managerComment = comment;
+    await db.collection('mails').doc(id).set({ managerComment: comment }, { merge: true });
+    toast('✓ تم حفظ التعليق');
+}
+
+// عند فتح الموظف، عرض التعليق
+function renderManagerComment(m){
+    const comment = m.managerComment || '';
+    if(comment){
+        document.getElementById('detailContent').innerHTML +=
+        `<div class="drow"><b>تعليق المدير</b><span>${esc(comment)}</span></div>`;
+    }
+}
+</script>
+
+</body></html>`);
   w.document.close();w.print();
 }
 
@@ -937,5 +981,27 @@ function badge(s){
   const[c,l]=m[s]||['ba',s];return`<span class="b ${c}">${l}</span>`;
 }
 </script>
+
+<script>
+async function saveComment(id){
+    const comment = document.getElementById('managerCommentInput').value.trim();
+    if(!comment) return;
+    const mail = mails.find(m => m.id === id);
+    if(!mail) return;
+    mail.managerComment = comment;
+    await db.collection('mails').doc(id).set({ managerComment: comment }, { merge: true });
+    toast('✓ تم حفظ التعليق');
+}
+
+// عند فتح الموظف، عرض التعليق
+function renderManagerComment(m){
+    const comment = m.managerComment || '';
+    if(comment){
+        document.getElementById('detailContent').innerHTML +=
+        `<div class="drow"><b>تعليق المدير</b><span>${esc(comment)}</span></div>`;
+    }
+}
+</script>
+
 </body>
 </html>
