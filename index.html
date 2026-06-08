@@ -239,6 +239,15 @@ tbody tr:hover td{background:var(--s2);color:var(--tx)}
   .tb-srch input{width:90px}table th:nth-child(n+5),table td:nth-child(n+5){display:none}}
 @media(max-width:600px){.sg{grid-template-columns:1fr 1fr}.ct{padding:12px}
   .agr{grid-template-columns:1fr}.tabs{overflow-x:auto;white-space:nowrap}}
+
+/* COMMENT MANAGER */
+.comment-box{background:rgba(168,85,247,.08);border:1px solid rgba(168,85,247,.28);border-radius:var(--r);padding:12px;margin-top:8px}
+.comment-box-label{font-size:11px;color:#d8b4fe;font-weight:700;margin-bottom:7px;display:flex;align-items:center;gap:5px}
+.comment-textarea{width:100%;min-height:82px;background:var(--bg);border:1px solid rgba(168,85,247,.32);border-radius:var(--r);color:var(--tx);padding:9px 10px;font-size:12px;line-height:1.7;resize:vertical;outline:none;font-family:'Tajawal',sans-serif}
+.comment-textarea:focus{border-color:var(--pu)}
+.comment-view{white-space:pre-wrap;line-height:1.8;color:#e9d5ff;font-size:12px}
+.comment-badge{background:var(--pu-bg);color:#d8b4fe;border:1px solid rgba(168,85,247,.25);padding:2px 7px;border-radius:20px;font-size:10px;font-weight:500}
+
 </style>
 </head>
 <body>
@@ -589,7 +598,7 @@ function rList(){
           ${view==='archive'?`<td><span class="${m.type==='in'?'ti':'to'}">${m.type==='in'?'وارد':'صادر'}</span></td>`:''}
           <td style="font-family:monospace;font-size:11px">${m.ref||''}</td>
           <td style="color:var(--tx3)">${m.date||''}</td>
-          <td>${m.subject||''}</td><td>${m.party||'—'}</td>
+          <td>${m.subject||''}${m.managerComment?` <span class="comment-badge">💬 تعليق</span>`:''}</td><td>${m.party||'—'}</td>
           <td>${m.att?`<span class="ac" style="cursor:pointer" onclick="event.stopPropagation();quickView('${m.id}')"><i class="ti ti-eye"></i>عرض</span>`:'—'}</td>
           <td>${badge(m.status)}</td>
           <td><i class="ti ti-chevron-left" style="color:var(--tx3);font-size:13px"></i></td>
@@ -681,6 +690,15 @@ function openDetail(id){
       <div class="dr"><span class="dk">الأولوية</span><span class="dv">${m.priority==='high'?'<span class="b bn">عاجل</span>':'<span class="b ba">عادي</span>'}</span></div>
       <div class="dr"><span class="dk">الحالة</span><span class="dv">${badge(m.status)}</span></div>
       ${m.notes?`<div class="dr"><span class="dk">ملاحظات</span><span class="dv">${m.notes}</span></div>`:''}
+      ${isMgr?`
+      <div class="comment-box">
+        <div class="comment-box-label"><i class="ti ti-message-2"></i> تهميشة المدير / تعليق على المراسلة</div>
+        <textarea class="comment-textarea" id="managerCommentInput" placeholder="اكتب تعليقك هنا... سيظهر للموظف عند فتح المراسلة">${m.managerComment||''}</textarea>
+      </div>`:(m.managerComment?`
+      <div class="comment-box">
+        <div class="comment-box-label"><i class="ti ti-message-2"></i> تعليق المدير</div>
+        <div class="comment-view">${m.managerComment}</div>
+      </div>`:'')}
       ${m.att?`
       <div class="att-section">
         <div class="att-section-title">
@@ -723,7 +741,8 @@ function openDetail(id){
         </select></div>`:''}
     </div>
     <div class="mf">
-      ${isMgr?`<button class="btn btn-bl btn-sm" onclick="updSt('${id}')"><i class="ti ti-check"></i> حفظ</button>`:''}
+      ${isMgr?`<button class="btn btn-bl btn-sm" onclick="updSt('${id}')"><i class="ti ti-check"></i> حفظ الحالة</button>
+      <button class="btn btn-gr btn-sm" onclick="saveMgrComment('${id}')"><i class="ti ti-message-2"></i> حفظ التهميشة</button>`:''}
       ${!m.archived?`<button class="btn btn-am btn-sm" onclick="arch('${id}')"><i class="ti ti-archive"></i> أرشفة</button>`
                    :`<button class="btn btn-gr btn-sm" onclick="unarch('${id}')"><i class="ti ti-inbox"></i> إلغاء أرشفة</button>`}
       <button class="btn btn-gh btn-sm" onclick="pdfExp('${id}')"><i class="ti ti-file-type-pdf"></i> PDF</button>
@@ -733,6 +752,27 @@ function openDetail(id){
 }
 
 async function updSt(id){const m=mails.find(x=>x.id===id);if(!m)return;m.status=document.getElementById('ss').value;closeModal();await saveMail(m);toast('✓ تم تحديث الحالة');}
+async function saveMgrComment(id){
+  const m=mails.find(x=>x.id===id);
+  if(!m)return;
+  const el=document.getElementById('managerCommentInput');
+  if(!el){toast('حقل التهميشة غير موجود',true);return;}
+  m.managerComment=el.value.trim();
+  try{
+    if(db && id && !id.startsWith('L')){
+      await db.collection(COLLECTION).doc(id).set({
+        managerComment:m.managerComment,
+        commentUpdatedAt:firebase.firestore.FieldValue.serverTimestamp()
+      },{merge:true});
+    }else{
+      await saveMail(m);
+    }
+    toast(m.managerComment?'✓ تم حفظ التهميشة':'✓ تم مسح التهميشة');
+  }catch(e){
+    toast('خطأ في حفظ التهميشة: '+(e.message||e.code),true);
+  }
+}
+
 async function arch(id){const m=mails.find(x=>x.id===id);if(!m)return;m.archived=true;m.status='archived';closeModal();await saveMail(m);toast('✓ تمت الأرشفة');}
 async function unarch(id){const m=mails.find(x=>x.id===id);if(!m)return;m.archived=false;m.status='done';closeModal();await saveMail(m);toast('✓ إلغاء الأرشفة');}
 function confDel(id){if(confirm('حذف هذا البريد نهائياً؟')){closeModal();delMail(id);toast('تم الحذف');}}
@@ -904,29 +944,7 @@ async function saveNew(){
 function pdfExp(id){
   const m=mails.find(x=>x.id===id);if(!m)return;
   const w=window.open('','_blank');
-  w.document.write(`<!DOCTYPE html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><title>بريد ${m.ref}</title><style>body{font-family:Tajawal,sans-serif;padding:24px;color:#1a1a18}.hd{border-bottom:2px solid #185FA5;padding-bottom:10px;margin-bottom:14px}h2{color:#185FA5;font-size:15px}.row{display:flex;justify-content:space-between;padding:6px 0;border-bottom:0.5px solid #eee;font-size:12px}.k{color:#666}.v{font-weight:500}.ft{margin-top:18px;font-size:10px;color:#aaa;border-top:1px solid #eee;padding-top:7px;display:flex;justify-content:space-between}</style></head><body><div class="hd"><h2>المركز الوطني لمكافحة الأمراض — إدارة التطعيمات</h2><div style="font-size:11px;color:#666">${new Date().toLocaleDateString('ar-LY')}</div></div><div class="row"><span class="k">الرقم الإشاري</span><span class="v" style="font-family:monospace">${m.ref}</span></div><div class="row"><span class="k">التاريخ</span><span class="v">${m.date}</span></div><div class="row"><span class="k">النوع</span><span class="v">${m.type==='in'?'بريد وارد':'بريد صادر'}</span></div><div class="row"><span class="k">${m.type==='in'?'من':'إلى'}</span><span class="v">${m.party||'—'}</span></div><div class="row"><span class="k">الموضوع</span><span class="v">${m.subject}</span></div><div class="row"><span class="k">الحالة</span><span class="v">${m.status}</span></div>${m.notes?`<div class="row"><span class="k">ملاحظات</span><span class="v">${m.notes}</span></div>`:''}<div class="ft"><span>NCDC — Libya</span><span>إدارة التطعيمات</span></div>
-<script>
-async function saveComment(id){
-    const comment = document.getElementById('managerCommentInput').value.trim();
-    if(!comment) return;
-    const mail = mails.find(m => m.id === id);
-    if(!mail) return;
-    mail.managerComment = comment;
-    await db.collection('mails').doc(id).set({ managerComment: comment }, { merge: true });
-    toast('✓ تم حفظ التعليق');
-}
-
-// عرض التعليق للموظف
-function renderManagerComment(m){
-    const comment = m.managerComment || '';
-    if(comment){
-        document.getElementById('detailContent').innerHTML +=
-        `<div class="drow"><b>تعليق المدير</b><span>${esc(comment)}</span></div>`;
-    }
-}
-</script>
-
-</body></html>`);
+  w.document.write(`<!DOCTYPE html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><title>بريد ${m.ref}</title><style>body{font-family:Tajawal,sans-serif;padding:24px;color:#1a1a18}.hd{border-bottom:2px solid #185FA5;padding-bottom:10px;margin-bottom:14px}h2{color:#185FA5;font-size:15px}.row{display:flex;justify-content:space-between;padding:6px 0;border-bottom:0.5px solid #eee;font-size:12px}.k{color:#666}.v{font-weight:500}.ft{margin-top:18px;font-size:10px;color:#aaa;border-top:1px solid #eee;padding-top:7px;display:flex;justify-content:space-between}</style></head><body><div class="hd"><h2>المركز الوطني لمكافحة الأمراض — إدارة التطعيمات</h2><div style="font-size:11px;color:#666">${new Date().toLocaleDateString('ar-LY')}</div></div><div class="row"><span class="k">الرقم الإشاري</span><span class="v" style="font-family:monospace">${m.ref}</span></div><div class="row"><span class="k">التاريخ</span><span class="v">${m.date}</span></div><div class="row"><span class="k">النوع</span><span class="v">${m.type==='in'?'بريد وارد':'بريد صادر'}</span></div><div class="row"><span class="k">${m.type==='in'?'من':'إلى'}</span><span class="v">${m.party||'—'}</span></div><div class="row"><span class="k">الموضوع</span><span class="v">${m.subject}</span></div><div class="row"><span class="k">الحالة</span><span class="v">${m.status}</span></div>${m.notes?`<div class="row"><span class="k">ملاحظات</span><span class="v">${m.notes}</span></div>`:''}<div class="ft"><span>NCDC — Libya</span><span>إدارة التطعيمات</span></div></body></html>`);
   w.document.close();w.print();
 }
 function expCSV(){
@@ -938,29 +956,7 @@ function expCSV(){
 function printA(){
   const rows=mails.map(m=>`<tr><td>${m.type==='in'?'وارد':'صادر'}</td><td>${m.ref}</td><td>${m.date}</td><td>${m.party}</td><td>${m.subject}</td><td>${m.status}</td></tr>`).join('');
   const w=window.open('','_blank');
-  w.document.write(`<!DOCTYPE html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><title>تقرير</title><style>body{font-family:Tajawal,sans-serif;padding:20px}table{width:100%;border-collapse:collapse;font-size:12px}th,td{border:1px solid #ccc;padding:5px 8px;text-align:right}th{background:#f0f0f0}</style></head><body><h2 style="margin-bottom:8px">تقرير البريد — إدارة التطعيمات</h2><p style="font-size:11px;color:#666;margin-bottom:10px">${new Date().toLocaleDateString('ar-LY')} | ${mails.length} رسالة</p><table><thead><tr><th>النوع</th><th>الرقم الإشاري</th><th>التاريخ</th><th>الجهة</th><th>الموضوع</th><th>الحالة</th></tr></thead><tbody>${rows}</tbody></table>
-<script>
-async function saveComment(id){
-    const comment = document.getElementById('managerCommentInput').value.trim();
-    if(!comment) return;
-    const mail = mails.find(m => m.id === id);
-    if(!mail) return;
-    mail.managerComment = comment;
-    await db.collection('mails').doc(id).set({ managerComment: comment }, { merge: true });
-    toast('✓ تم حفظ التعليق');
-}
-
-// عرض التعليق للموظف
-function renderManagerComment(m){
-    const comment = m.managerComment || '';
-    if(comment){
-        document.getElementById('detailContent').innerHTML +=
-        `<div class="drow"><b>تعليق المدير</b><span>${esc(comment)}</span></div>`;
-    }
-}
-</script>
-
-</body></html>`);
+  w.document.write(`<!DOCTYPE html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><title>تقرير</title><style>body{font-family:Tajawal,sans-serif;padding:20px}table{width:100%;border-collapse:collapse;font-size:12px}th,td{border:1px solid #ccc;padding:5px 8px;text-align:right}th{background:#f0f0f0}</style></head><body><h2 style="margin-bottom:8px">تقرير البريد — إدارة التطعيمات</h2><p style="font-size:11px;color:#666;margin-bottom:10px">${new Date().toLocaleDateString('ar-LY')} | ${mails.length} رسالة</p><table><thead><tr><th>النوع</th><th>الرقم الإشاري</th><th>التاريخ</th><th>الجهة</th><th>الموضوع</th><th>الحالة</th></tr></thead><tbody>${rows}</tbody></table></body></html>`);
   w.document.close();w.print();
 }
 
@@ -981,27 +977,5 @@ function badge(s){
   const[c,l]=m[s]||['ba',s];return`<span class="b ${c}">${l}</span>`;
 }
 </script>
-
-<script>
-async function saveComment(id){
-    const comment = document.getElementById('managerCommentInput').value.trim();
-    if(!comment) return;
-    const mail = mails.find(m => m.id === id);
-    if(!mail) return;
-    mail.managerComment = comment;
-    await db.collection('mails').doc(id).set({ managerComment: comment }, { merge: true });
-    toast('✓ تم حفظ التعليق');
-}
-
-// عرض التعليق للموظف
-function renderManagerComment(m){
-    const comment = m.managerComment || '';
-    if(comment){
-        document.getElementById('detailContent').innerHTML +=
-        `<div class="drow"><b>تعليق المدير</b><span>${esc(comment)}</span></div>`;
-    }
-}
-</script>
-
 </body>
 </html>
